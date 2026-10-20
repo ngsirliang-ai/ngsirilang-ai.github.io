@@ -1,0 +1,134 @@
+/* ─────────────────────────────────────────────────────────────────────
+   Global styles — one file, readable top to bottom.
+   This is deliberately plain: a proper design pass comes later and
+   will replace these tokens. Structure:
+
+   1. Design tokens (CSS variables)   2. Base element styles
+   3. Header / footer                 4. Page-specific pieces
+   ───────────────────────────────────────────────────────────────────── */
+
+/* 1. Design tokens — change colors here, everything follows */
+:root {
+  --bg: #faf9f7;
+  --text: #22252b;
+  --muted: #667085;
+  --card: #ffffff;
+  --border: #e6e4df;
+  --accent: #9a6b2f; /* warm brass — placeholder until the design pass */
+}
+
+/* Respect visitors who prefer dark mode (uses the same token names) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161a;
+    --text: #e8e6e1;
+    --muted: #9aa0aa;
+    --card: #1c1f24;
+    --border: #2a2e35;
+    --accent: #d9a55c;
+  }
+}
+
+/* 2. Base */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+}
+
+/* 3. Header / footer */
+.site-header {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.brand {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.site-header nav a {
+  margin-left: 1.1rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+.site-header nav a:hover { color: var(--text); }
+
+.site-footer {
+  max-width: 48rem;
+  margin: 3rem auto 0;
+  padding: 1.5rem 1.25rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* 4. Shared page pieces */
+.container {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0 1.25rem 2rem;
+}
+
+.hero { padding: 4rem 0 1.5rem; }
+.hero h1 {
+  font-size: 2.6rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.4rem;
+}
+.tagline { color: var(--accent); font-weight: 600; margin: 0 0 1.25rem; }
+.lede { font-size: 1.15rem; color: var(--muted); max-width: 38rem; }
+
+/* Pillar cards on the homepage */
+.pillars {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  margin-top: 2.5rem;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  text-decoration: none;
+  color: var(--text);
+}
+.card:hover { border-color: var(--accent); }
+.card h2 { font-size: 1.05rem; margin: 0.15rem 0 0.5rem; }
+.card p { margin: 0; color: var(--muted); font-size: 0.925rem; }
+
+/* Career timeline on the About page */
+.timeline { list-style: none; padding: 0; margin: 1.5rem 0; }
+.timeline li {
+  border-left: 2px solid var(--border);
+  padding: 0 0 1.6rem 1.25rem;
+  position: relative;
+}
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: 0.45rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.timeline .period { font-size: 0.85rem; color: var(--muted); }
+.timeline h3 { margin: 0.15rem 0 0.2rem; font-size: 1rem; }
+.timeline .org { margin: 0; color: var(--muted); font-size: 0.925rem; }
+
+/* Simple stub-page marker */
+.stub { color: var(--muted); font-style: italic; }

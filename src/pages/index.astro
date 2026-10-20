@@ -1,0 +1,47 @@
+---
+// The homepage. Everything between the two `---` lines runs at BUILD
+// time on your machine — the visitor's browser never executes it.
+// That's why Astro sites load fast: pages arrive as ready-made HTML.
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Data + .map() is the core Astro pattern: keep content in the
+// frontmatter, loop over it in the markup below.
+const pillars = [
+  {
+    href: '/about/',
+    kicker: 'Professional',
+    blurb: 'Hotel feasibility & hospitality real estate across APAC — a decade of Hyatt deals.',
+  },
+  {
+    href: '/projects/',
+    kicker: 'AI Mini-Projects',
+    blurb: 'Small experiments with AI — including an interactive hotel feasibility toolkit.',
+  },
+  {
+    href: '/automations/',
+    kicker: 'Automations',
+    blurb: 'Workflows that run themselves: monitoring, digests, and quiet quality-of-life wins.',
+  },
+];
+---
+
+<BaseLayout title="Home">
+  <section class="hero">
+    <h1>Sir Liang Ng</h1>
+    <p class="tagline">Hotel feasibility by day, AI tinkerer by night.</p>
+    <p class="lede">
+      Director of Feasibility at Hyatt in Hong Kong. I study whether hotel deals
+      should happen — and I build small AI tools and automations for everything else.
+    </p>
+  </section>
+
+  <section class="pillars">
+    {pillars.map((p) => (
+      <a class="card" href={p.href}>
+        <h2>{p.kicker}</h2>
+        <p>{p.blurb}</p>
+      </a>
+    ))}
+  </section>
+</BaseLayout>

@@ -1,0 +1,80 @@
+---
+// About = bio + career timeline + contact.
+// Career data below is from your LinkedIn — edit freely, it's yours.
+// TODO(design-pass): this page gets real typography treatment later.
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const roles = [
+  {
+    period: '2024 — now',
+    title: 'Director of Feasibility',
+    org: 'Hyatt Hotels Corporation · Hong Kong',
+  },
+  {
+    period: '2023 — 2024',
+    title: 'Senior Feasibility Manager',
+    org: 'Hyatt Hotels Corporation · Hong Kong SAR',
+  },
+  {
+    period: '2022 — 2023',
+    title: 'Senior Feasibility Manager',
+    org: 'Hyatt Hotels Corporation · Shanghai',
+  },
+  {
+    period: '2018 — 2022',
+    title: 'Feasibility Manager, Real Estate & Development',
+    org: 'Hyatt Hotels Corporation',
+  },
+  {
+    period: '2016 — 2018',
+    title: 'MOR Leader (Internal Audit), Finance',
+    org: 'AVANI Hotels & Resorts · Malaysia',
+  },
+  {
+    period: '2015 — 2016',
+    title: 'Finance Manager',
+    org: 'AVANI Hotels & Resorts · Malaysia',
+  },
+];
+
+// TODO(you): replace with how you actually want to be contacted.
+const contact = {
+  email: 'hello@example.com', // consider an obfuscated form later
+  linkedin: 'https://www.linkedin.com/in/sir-liang-ng-283a7482/',
+};
+---
+
+<BaseLayout title="About" description="Hotel feasibility executive at Hyatt; AI hobbyist in Hong Kong.">
+  <section class="hero">
+    <h1>About</h1>
+    <p class="lede">
+      Singaporean, based in Hong Kong. Ten years in hotel feasibility and
+      hospitality real estate — first in finance, now deciding which hotel
+      deals deserve to exist. Along the way I picked up a habit of building
+      small AI tools and automations, which this site collects.
+    </p>
+    <p class="lede">English · 中文 · ไทย · ລາວ</p>
+  </section>
+
+  <section>
+    <h2>Career</h2>
+    <ol class="timeline">
+      {roles.map((r) => (
+        <li>
+          <div class="period">{r.period}</div>
+          <h3>{r.title}</h3>
+          <p class="org">{r.org}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p>
+      Email: <a href={`mailto:${contact.email}`}>{contact.email}</a><br />
+      LinkedIn: <a href={contact.linkedin} rel="me">sir-liang-ng</a>
+    </p>
+  </section>
+</BaseLayout>

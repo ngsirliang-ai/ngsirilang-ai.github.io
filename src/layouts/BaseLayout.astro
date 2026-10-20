@@ -1,0 +1,51 @@
+---
+// A layout is the shared shell every page gets wrapped in —
+// the <html> skeleton, nav, footer, and global styles live here once.
+//
+// How a page uses it:
+//   <BaseLayout title="About"> ...page content... </BaseLayout>
+// The page's content lands where <slot /> is below.
+
+import '../styles/global.css';
+
+// Props: values a page passes in when it uses this layout.
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Hotel feasibility by day, AI tinkerer by night.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} · Sir Liang Ng</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/" class="brand">Sir Liang Ng</a>
+      <nav>
+        <a href="/about/">About</a>
+        <a href="/projects/">Projects</a>
+        <a href="/automations/">Automations</a>
+        <a href="/writing/">Writing</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <slot /> <!-- ← each page's content is inserted here -->
+    </main>
+
+    <footer class="site-footer">
+      <p>© {new Date().getFullYear()} Sir Liang Ng · Built with <a href="https://astro.build">Astro</a></p>
+    </footer>
+  </body>
+</html>

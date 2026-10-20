@@ -1,0 +1,19 @@
+# build output
+dist/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+
+# environment variables (never commit these)
+.env
+.env.*
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
