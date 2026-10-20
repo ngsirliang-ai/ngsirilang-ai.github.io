@@ -1,0 +1,85 @@
+---
+// A Telegram-style message preview card (dark theme, like the desktop app).
+// The shell lives here; the message body comes from whatever the page
+// puts between the tags (Astro calls that a <slot />).
+//
+// Usage:
+//   <TelegramMock botName="Jarv" time="08:00">
+//     ...message content...
+//   </TelegramMock>
+interface Props {
+  botName: string;
+  time?: string;
+}
+const { botName, time = '08:00' } = Astro.props;
+---
+
+<div class="tg">
+  <div class="tg-header">
+    <span class="tg-avatar">{botName.charAt(0)}</span>
+    <span class="tg-name">{botName}<span class="tg-badge">bot</span></span>
+  </div>
+  <div class="tg-chat">
+    <div class="tg-datepill">October 21</div>
+    <div class="tg-bubble">
+      <div class="tg-msg"><slot /></div>
+      <div class="tg-meta">{time}&nbsp;&nbsp;<span class="tg-ticks">✓✓</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Styles here are SCOPED: they only apply inside this component,
+     so .tg names can never collide with page styles. -->
+<style>
+  .tg {
+    max-width: 21rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #0e1621;          /* Telegram dark chat background */
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .tg-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.9rem;
+    background: #17212b;
+  }
+  .tg-avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: #2b7fd9;
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+  .tg-name { color: #e8edf2; font-weight: 600; font-size: 0.9rem; }
+  .tg-badge { color: #7f91a4; font-size: 0.72rem; margin-left: 0.35rem; font-weight: 400; }
+  .tg-chat {
+    padding: 0.9rem 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .tg-datepill {
+    align-self: center;
+    background: #182533;
+    color: #7f91a4;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 0.6rem;
+  }
+  .tg-bubble {
+    background: #182533;          /* incoming message bubble */
+    border-radius: 0.7rem 0.7rem 0.7rem 0.2rem;
+    padding: 0.55rem 0.7rem 0.4rem;
+  }
+  .tg-msg { color: #e8edf2; font-size: 0.86rem; line-height: 1.5; }
+  .tg-meta { color: #7f91a4; font-size: 0.68rem; text-align: right; margin-top: 0.25rem; }
+  .tg-ticks { color: #4fae4f; letter-spacing: -0.12em; }
+</style>

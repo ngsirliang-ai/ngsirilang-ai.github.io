@@ -1,17 +1,86 @@
 ---
-// Pillar 3: automations that actually run. Stub for now — will become
-// a content collection with architecture diagrams + outcomes.
+// Pillar 3: automations that actually run.
+// First resident: the SG Haze Monitor — a Telegram digest of Singapore's
+// official PSI/PM2.5 readings, with the TelegramMock component showing
+// what the message actually looks like.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import TelegramMock from '../components/TelegramMock.astro';
 ---
 
 <BaseLayout title="Automations">
   <section class="hero">
     <h1>Automations</h1>
     <p class="lede">
-      Workflows that run without me: a Singapore haze monitor that reports
-      PSI to family over Telegram, a press-mention digest for a certain
-      kopi shop in Shanghai, and other quiet quality-of-life wins.
+      Workflows that run without me. Monitoring, digests, and quiet
+      quality-of-life wins — built once, then left alone to do their job.
     </p>
-    <p class="stub">Coming soon — with architecture notes, not just screenshots.</p>
   </section>
+
+  <article class="automation">
+    <h2>SG Haze Monitor</h2>
+
+    <!-- The box: a preview of the actual Telegram message -->
+    <div class="preview">
+      <TelegramMock botName="Jarv" time="08:00">
+        <pre class="report">SG Haze Report — Tue 21 Oct
+
+24-h PSI   trend
+North     87   ▲
+South     84   ▼
+East      91   —
+West      95   ▲
+Central   88   —
+
+PM2.5 (24h): 17–23 µg/m³
+Overall: NORMAL
+Source: NEA · data.gov.sg</pre>
+      </TelegramMock>
+      <p class="preview-note">Preview · sample readings</p>
+    </div>
+
+    <!-- The brief description below the box -->
+    <p>
+      Twice a day — and instantly when any region crosses an unhealthy
+      threshold — a scheduled agent pulls Singapore's official air-quality
+      readings from the NEA open API, breaks PSI and PM2.5 down by region,
+      and delivers the digest to my family on Telegram. My parents in
+      Singapore see the haze coming before they smell it.
+    </p>
+
+    <p class="flow-label">How it runs</p>
+    <code class="flow">NEA open API → scheduled agent · 2× daily + threshold watch → regional PSI/PM2.5 digest → Telegram DM</code>
+  </article>
+
+  <p class="stub">Next resident: a press-mention digest for a certain kopi shop on Jujulu Road, Shanghai.</p>
 </BaseLayout>
+
+<style>
+  .automation { margin-top: 1.5rem; }
+  .automation h2 { margin-bottom: 1.25rem; }
+  .preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 0 1.75rem;
+  }
+  .preview-note { color: var(--muted); font-size: 0.78rem; margin: 0.55rem 0 0; font-style: italic; }
+  .report {
+    margin: 0;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    white-space: pre;
+    color: #e8edf2;
+  }
+  .flow-label { font-weight: 600; margin-bottom: 0.4rem; }
+  .flow {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    overflow-x: auto;
+  }
+</style>
