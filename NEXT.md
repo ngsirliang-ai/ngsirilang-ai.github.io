@@ -7,16 +7,26 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 
 ## ⏳ Waiting on William (5-minute items)
 
-- [ ] **BotFather bot** — in Telegram: @BotFather → `/newbot` → e.g.
-      "William's Site Relay" → paste the token to Jarv. Then message the new
-      bot once (any text) so it can DM you.
+- [x] **BotFather bot** — DONE 2026-10-22: @SirLiangWeb_bot. Token +
+      chat_id (8258403217) saved in Desktop\Config\ (site-relay-bot-token.txt,
+      site-relay-chat-id.txt). Test DM delivered ✓.
 - [ ] **Cloudflare account** — dash.cloudflare.com, free plan, no card.
-- [ ] **Mark Six predictor + TamaDroid cards** — need their Manus-hosted URLs
-      (check the Creations gallery for `*.manus.space` links) or screenshots.
+      Then: deploy worker/relay.js (already written, secrets via wrangler),
+      set RELAY_URL in ChatWidget, restore widget as footer link.
+- [x] **Mark Six + TamaDroid** — DONE 2026-10-22 as Automations cards
+      ("Lottery Systems Lab" terminal with real 132-draw data; TamaDroid
+      with real phone screenshot + demo links).
 - [x] **Real contact email** — done 2026-10-22: Cue relay
       `cue-vmitjb@bot.cue.im` live on About + parked ChatWidget. LinkedIn via
       short link `is.gd/2iiRiX` (clean 301; tinyurl.com wraps links in a
       VigLink ad hop — avoided).
+
+## 🚫 Off the site (William's call, 2026-10-22)
+
+- **Kopi mention digest** — private tool only, never shown on the site.
+- **Feasibility toolkit** — William builds it separately; not in this
+  site's queue (may link to it when it exists).
+- **Custom domain** — waits until there's "something plausible to show".
 
 ## 🤖 Chatbot (Phase B — next build session)
 
@@ -33,8 +43,8 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 ## 🌐 Website next steps
 
 - [ ] Writing section: content collections + first post (William writes).
-- [ ] Kopi-shop mention digest card on Automations (reuse TelegramMock).
-- [ ] Feasibility toolkit page — the signature piece (RevPAR→value, IRR).
+- [ ] Kopi digest card: REMOVED from plan (William: private only, 2026-10-22).
+- [ ] Feasibility toolkit — William builds separately (off this queue).
 - [ ] Fix live Singapore Pulse bug: forecast card renders `[object Object]`
       under "Thundery Showers" (in the Manus-hosted app / repo
       `live-stats-test`).
