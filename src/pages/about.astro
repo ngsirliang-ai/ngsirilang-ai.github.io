@@ -5,37 +5,47 @@
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const roles = [
+const cities = [
   {
-    period: '2024 — now',
-    title: 'Director of Feasibility',
-    org: 'Hyatt Hotels Corporation · Hong Kong',
+    city: 'Singapore',
+    period: 'the beginning —',
+    roles: [],
+    note: 'Where the accent comes from. Still home for the parents — and the reason my phone gets haze updates from a robot I built.',
   },
   {
-    period: '2023 — 2024',
-    title: 'Senior Feasibility Manager',
-    org: 'Hyatt Hotels Corporation · Hong Kong SAR',
+    city: 'Kuala Lumpur, Malaysia',
+    period: '2015 — 2018',
+    roles: [
+      'Finance Manager · AVANI Hotels & Resorts',
+      'MOR Leader (Internal Audit), Finance · AVANI Hotels & Resorts',
+    ],
+    note: 'Learned to read a P&L before most people learn to read a room.',
   },
   {
-    period: '2022 — 2023',
-    title: 'Senior Feasibility Manager',
-    org: 'Hyatt Hotels Corporation · Shanghai',
+    city: 'Shanghai, China',
+    period: '2018 — 2023',
+    roles: [
+      'Feasibility Manager, Real Estate & Development · Hyatt',
+      'Senior Feasibility Manager · Hyatt',
+    ],
+    note: 'Five years of asking beautiful hotel dreams what the numbers thought of them. Shanghai stuck — my wife runs a kopi shop there now.',
   },
   {
-    period: '2018 — 2022',
-    title: 'Feasibility Manager, Real Estate & Development',
-    org: 'Hyatt Hotels Corporation',
+    city: 'Hong Kong SAR',
+    period: '2023 — now',
+    roles: [
+      'Senior Feasibility Manager · Hyatt',
+      'Director of Feasibility · Hyatt',
+    ],
+    note: 'Now I direct the skepticism.',
   },
-  {
-    period: '2016 — 2018',
-    title: 'MOR Leader (Internal Audit), Finance',
-    org: 'AVANI Hotels & Resorts · Malaysia',
-  },
-  {
-    period: '2015 — 2016',
-    title: 'Finance Manager',
-    org: 'AVANI Hotels & Resorts · Malaysia',
-  },
+];
+
+const wherenow = [
+  { label: 'Base camp', value: 'Shenzhen' },
+  { label: 'Work', value: 'Hong Kong' },
+  { label: 'Home', value: 'Singapore' },
+  { label: 'Heart', value: 'Shanghai' },
 ];
 
 // TODO(you): replace with how you actually want to be contacted.
@@ -49,25 +59,46 @@ const contact = {
   <section class="hero">
     <h1>About</h1>
     <p class="lede">
-      Singaporean, based in Hong Kong. Ten years in hotel feasibility and
-      hospitality real estate — first in finance, now deciding which hotel
-      deals deserve to exist. Along the way I picked up a habit of building
-      small AI tools and automations, which this site collects.
+      Singaporean, currently on loan to Hong Kong. I run feasibility for hotel
+      deals at Hyatt — on paper that's market studies and investment models; in
+      practice it's being the person who tells excited people their dream hotel
+      should stay a dream. Ten years and four cities in, I still can't walk
+      past a building site without estimating the room rate. Off duty I build
+      small AI tools and automations — this site is where they live.
     </p>
     <p class="lede">English · 中文 · ไทย · ລາວ</p>
   </section>
 
   <section>
-    <h2>Career</h2>
-    <ol class="timeline">
-      {roles.map((r) => (
-        <li>
-          <div class="period">{r.period}</div>
-          <h3>{r.title}</h3>
-          <p class="org">{r.org}</p>
-        </li>
+    <h2>The route so far</h2>
+    <div class="cities">
+      {cities.map((c) => (
+        <div class="city">
+          <div class="city-head">
+            <h3>{c.city}</h3>
+            <span class="period">{c.period}</span>
+          </div>
+          {c.roles.length > 0 && (
+            <ul class="roles">
+              {c.roles.map((r) => <li>{r}</li>)}
+            </ul>
+          )}
+          <p class="city-note">{c.note}</p>
+        </div>
       ))}
-    </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where things are now</h2>
+    <ul class="wherenow">
+      {wherenow.map((n) => (
+        <li><span class="chip-label">{n.label}</span><strong>{n.value}</strong></li>
+      ))}
+    </ul>
+    <p class="city-note">
+      The four-city life isn't a lifestyle choice — it's a boarding pass collection.
+    </p>
   </section>
 
   <section>
@@ -78,3 +109,40 @@ const contact = {
     </p>
   </section>
 </BaseLayout>
+
+<style>
+  /* City chapters — a travel-log version of the old timeline */
+  .cities { display: flex; flex-direction: column; gap: 1.9rem; margin: 1.5rem 0; }
+  .city {
+    border-left: 2px solid var(--border);
+    padding-left: 1.25rem;
+    position: relative;
+  }
+  .city::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 0.5rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .city-head { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
+  .city-head h3 { margin: 0; font-size: 1.05rem; }
+  .period { font-size: 0.85rem; color: var(--muted); }
+  .roles { list-style: none; margin: 0.6rem 0 0.4rem; padding: 0; }
+  .roles li { font-size: 0.925rem; color: var(--text); margin-bottom: 0.2rem; }
+  .city-note { margin: 0.25rem 0 0; color: var(--muted); font-style: italic; font-size: 0.925rem; }
+
+  /* The wanderer strip */
+  .wherenow { list-style: none; display: flex; flex-wrap: wrap; gap: 0.75rem; padding: 0; margin: 1rem 0 0.75rem; }
+  .wherenow li {
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 0.6rem;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.9rem;
+  }
+  .chip-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.45rem; }
+</style>
