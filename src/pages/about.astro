@@ -31,7 +31,7 @@ const cities = [
     note: 'A management trainee is a suitcase with a job title. Ended up running monthly P&Ls and credit control in KL.',
   },
   {
-    flags: ['hk'],
+    flags: [],
     stamps: [
       { code: 'vn', name: 'Vietnam' },
       { code: 'id', name: 'Indonesia' },
@@ -41,8 +41,8 @@ const cities = [
       { code: 'au', name: 'Australia' },
       { code: 'cn', name: 'China' },
     ],
-    city: 'Hong Kong — The Wandering Auditor',
-    period: '2016 — 2018',
+    city: 'The Wandering Auditor',
+    period: '2016 — 2018 · based at 36,000 ft',
     roles: ['MOR Leader (Internal Audit), Finance · Hyatt'],
     note: 'Two years auditing hotel finance operations across seven countries. Hotels opened their books; I brought the skepticism.',
   },
@@ -108,11 +108,13 @@ const contact = {
       {cities.map((c, i) => (
         <div class:list={['stop', i === 0 && 'open']}>
           <button type="button" class="stop-head" aria-expanded={i === 0 ? 'true' : 'false'}>
-            <span class="flags">
-              {c.flags.map((f) => (
-                <img class="flag" src={`/flags/${f}.svg`} alt="" width="24" height="16" />
-              ))}
-            </span>
+            {c.flags.length > 0 && (
+              <span class="flags">
+                {c.flags.map((f) => (
+                  <img class="flag" src={`/flags/${f}.svg`} alt="" width="24" height="16" />
+                ))}
+              </span>
+            )}
             <span class="stop-name">{c.city}</span>
             <span class="period">{c.period}</span>
             <span class="chev" aria-hidden="true">▾</span>
