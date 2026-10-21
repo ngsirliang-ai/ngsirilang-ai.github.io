@@ -63,7 +63,17 @@ const wherenow = [
   { flag: 'cn', label: 'Base camp', value: 'Shenzhen' },
   { flag: 'hk', label: 'Work', value: 'Hong Kong' },
   { flag: 'sg', label: 'Home', value: 'Singapore' },
-  { flag: 'cn', label: 'Heart', value: 'Shanghai' },
+  { flag: 'cn', label: 'Work / Play', value: 'Shanghai' },
+];
+
+// The toolkit — edit freely. Icons are emoji (render everywhere, no assets).
+const aiStack = [
+  { label: 'Harness', items: [{ icon: '⚡', name: 'Hermes' }, { icon: '🤖', name: 'Manus' }] },
+  {
+    label: 'Models',
+    items: [{ icon: '💬', name: 'ChatGPT' }, { icon: '✨', name: 'Gemini' }, { icon: '🧠', name: 'GLM' }],
+  },
+  { label: 'Automation Tools', items: [{ icon: '🔗', name: 'n8n' }] },
 ];
 
 // TODO(you): replace with how you actually want to be contacted.
@@ -77,15 +87,13 @@ const contact = {
   <section class="hero">
     <h1>About</h1>
     <p class="lede">
-      Singaporean, currently on loan to Hong Kong. I started out selling hotel
-      rooms in Laos; these days I decide which hotel rooms get to exist —
-      feasibility for Hyatt deals, which on paper is market studies and
-      investment models, and in practice is telling excited people their dream
-      hotel should stay a dream. In between: hotel school in Switzerland,
-      finance in Malaysia and the Maldives, and two years as a wandering
-      auditor stamping through seven countries. I still can't walk past a
-      building site without estimating the room rate. Off duty I build small
-      AI tools and automations — this site is where they live.
+      Singaporean on loan to Hong Kong. From hotel ops to pre-development and
+      feasibility now — nothing beats the excitement of seeing a plot of land
+      transform into a hotel. My sense of an area is governed by the hotel and
+      its scale in that location; oddly, this comes with a genuinely bad sense
+      of direction. Still a wanderluster, albeit not sure where's next. Off
+      duty I meddle with small AI tools and automations, and try to make sense
+      of everything.
     </p>
     <p class="lede">English · 中文 · ไทย · ລາວ</p>
   </section>
@@ -136,7 +144,7 @@ const contact = {
   </section>
 
   <section>
-    <h2>Where things are now</h2>
+    <h2>Where You Can Spot Me</h2>
     <ul class="wherenow">
       {wherenow.map((n) => (
         <li>
@@ -148,6 +156,24 @@ const contact = {
     <p class="city-note">
       The four-city life isn't a lifestyle choice — it's a boarding pass collection.
     </p>
+  </section>
+
+  <section>
+    <h2>The AI stack</h2>
+    <ul class="aistack">
+      {aiStack.map((row) => (
+        <li>
+          <span class="chip-label">{row.label}</span>
+          <span class="stack-items">
+            {row.items.map((t) => (
+              <span class="stack-item">
+                <span aria-hidden="true">{t.icon}</span> {t.name}
+              </span>
+            ))}
+          </span>
+        </li>
+      ))}
+    </ul>
   </section>
 
   <section>
@@ -251,6 +277,22 @@ const contact = {
     background: var(--card);
   }
   .wherenow li { display: flex; align-items: center; gap: 0.45rem; }
+
+  /* AI stack — label column + tool chips */
+  .aistack { list-style: none; margin: 1rem 0; padding: 0; display: flex; flex-direction: column; gap: 0.65rem; }
+  .aistack li { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .aistack .chip-label { min-width: 9.5rem; }
+  .stack-items { display: inline-flex; flex-wrap: wrap; gap: 0.45rem; }
+  .stack-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+    border-radius: 999px;
+    padding: 0.24rem 0.75rem;
+    font-size: 0.85rem;
+  }
 
   /* Scroll-reveal removed — stops now expand on hover/tap. */
 </style>

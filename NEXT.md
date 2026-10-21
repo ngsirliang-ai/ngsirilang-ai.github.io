@@ -40,6 +40,10 @@ see the personal-site skill). Preview for William: `desktop_preview` open
       under "Thundery Showers" (in the Manus-hosted app / repo
       `live-stats-test`).
 - [ ] Design pass (skills: claude-design + popular-web-designs).
+      **Locked decision (William, 2026-10-22): Option 3 — dark-first brand.**
+      Design the DARK theme as canonical (departure-board amber-on-black is
+      the brand), derive light from it; keep prefers-color-scheme for first
+      visit; add a sun/moon toggle in the header persisted to localStorage.
 - [ ] Shader hero island (shaders/js) — ONE effect, after design pass.
 - [ ] Nice-to-have: OG/meta tags + preview image, favicon set, sitemap.
 
