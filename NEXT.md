@@ -13,8 +13,10 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 - [ ] **Cloudflare account** — dash.cloudflare.com, free plan, no card.
 - [ ] **Mark Six predictor + TamaDroid cards** — need their Manus-hosted URLs
       (check the Creations gallery for `*.manus.space` links) or screenshots.
-- [ ] **Real contact email** — About page + chatbot still use
-      `hello@example.com` placeholder.
+- [x] **Real contact email** — done 2026-10-22: Cue relay
+      `cue-vmitjb@bot.cue.im` live on About + parked ChatWidget. LinkedIn via
+      short link `is.gd/2iiRiX` (clean 301; tinyurl.com wraps links in a
+      VigLink ad hop — avoided).
 - [ ] **GitHub support ticket** — if the repo is still flagged after ~48h,
       file from your own Edge at support.github.com/contact (draft text is in
       the chat history / can be regenerated).
