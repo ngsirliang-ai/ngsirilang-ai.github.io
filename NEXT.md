@@ -21,6 +21,11 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 
 ## 🤖 Chatbot (Phase B — next build session)
 
+- [ ] **ChatWidget parked (2026-10-22, William: "affecting experience")** —
+      component file kept at src/components/ChatWidget.astro; restore by
+      re-adding `import ChatWidget` + `<ChatWidget />` in BaseLayout.astro.
+      Redesign as a quieter affordance (e.g. a footer "Ask me" link that
+      opens the panel) before it returns.
 - [ ] Cloudflare Worker: POST /message → rate-limit → Telegram sendMessage to
       William's chat_id (secrets: bot token + chat id).
 - [ ] Set `RELAY_URL` in `src/components/ChatWidget.astro`, test end-to-end.
