@@ -17,9 +17,6 @@ see the personal-site skill). Preview for William: `desktop_preview` open
       `cue-vmitjb@bot.cue.im` live on About + parked ChatWidget. LinkedIn via
       short link `is.gd/2iiRiX` (clean 301; tinyurl.com wraps links in a
       VigLink ad hop — avoided).
-- [ ] **GitHub support ticket** — if the repo is still flagged after ~48h,
-      file from your own Edge at support.github.com/contact (draft text is in
-      the chat history / can be regenerated).
 
 ## 🤖 Chatbot (Phase B — next build session)
 

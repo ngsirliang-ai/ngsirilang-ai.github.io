@@ -11,8 +11,8 @@ import TelegramMock from '../components/TelegramMock.astro';
   <section class="hero">
     <h1>Automations</h1>
     <p class="lede">
-      Workflows that run without me. Monitoring, digests, and quiet
-      quality-of-life wins — built once, then left alone to do their job.
+      Things that run without me — monitors, simulators, and for-fun labs.
+      Built once, then left alone to do their job.
     </p>
   </section>
 
@@ -51,7 +51,65 @@ Source: NEA · data.gov.sg</pre>
     <code class="flow">NEA open API → scheduled agent · 2× daily + threshold watch → regional PSI/PM2.5 digest → Telegram DM</code>
   </article>
 
-  <p class="stub">Next resident: a press-mention digest for a certain kopi shop on Jujulu Road, Shanghai.</p>
+  <article class="automation">
+    <h2>Lottery Systems Lab</h2>
+
+    <!-- The box: a real scoring run, terminal-style -->
+    <div class="preview">
+      <div class="term">
+        <div class="term-bar"><span></span><span></span><span></span></div>
+        <pre class="report">lottery-lab $ score --game mark-six
+
+draws loaded   132 · 2025-10 → 2026-09
+latest draw    #104 · 04 28 31 44 47 48  +19
+
+hot numbers    28 ×29   07 ×24   02 ×22
+               04 ×22   37 ×22   17 ×20
+
+line A    02 04 28 31 34 47   (+08)
+line B    06 07 09 18 19 46   (+34)
+
+→ for the fun of it — draws are random</pre>
+      </div>
+      <p class="preview-note">Real output · 132 official draws, frequencies computed live</p>
+    </div>
+
+    <p>
+      Lottery systems as a systems problem. Hong Kong's Mark Six and China's
+      SSQ, treated the way I treat hotel markets: pull the official draw
+      history, clean it, score every number on frequency and recency with a
+      judgment API, and propose candidate lines with the evidence attached.
+      Strictly for fun — draws are random, and hit-rate tracking hasn't been
+      built (yet).
+    </p>
+
+    <p class="flow-label">How it runs</p>
+    <code class="flow">HKJC / SSQ draw history → data cleaning → JEV-scored frequency × recency → evidence-backed candidate lines</code>
+  </article>
+
+  <article class="automation">
+    <h2>TamaDroid</h2>
+
+    <div class="preview">
+      <img class="phone" src="/projects/tamadroid-1.png" alt="TamaDroid running on an Android phone: a Tamagotchi creature alive on the emulated LCD" width="393" height="480" />
+      <p class="preview-note">Running on a real phone · demo clip on YouTube</p>
+    </div>
+
+    <p>
+      A working Tamagotchi P1/P2 emulator for Android — the TamaLib engine
+      compiled in through the NDK, with a home-screen widget so the creature
+      is one glance away. Part of a wider habit of taking AI toys apart:
+      the companion exploration probes a Folotoy's firmware the same way.
+    </p>
+
+    <p class="links">
+      <a href="https://youtube.com/shorts/tBHBIujZzkU" target="_blank" rel="noopener">Watch the demo ↗</a>
+      <a href="https://github.com/twelvehouse/TamaDroid/releases" target="_blank" rel="noopener">APK on GitHub ↗</a>
+    </p>
+
+    <p class="flow-label">How it runs</p>
+    <code class="flow">TamaLib emulator core (C, GPLv2) → Android NDK / JNI → home-screen widget · GPLv2</code>
+  </article>
 </BaseLayout>
 
 <style>
@@ -73,6 +131,29 @@ Source: NEA · data.gov.sg</pre>
     color: #e8edf2;
   }
   .flow-label { font-weight: 600; margin-bottom: 0.4rem; }
+  /* Terminal-style preview box (Lottery Systems Lab) */
+  .term {
+    width: 100%;
+    max-width: 30rem;
+    border: 1px solid var(--border);
+    border-radius: 0.7rem;
+    overflow: hidden;
+    background: #0b0d10;
+  }
+  .term-bar { display: flex; gap: 0.3rem; padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); }
+  .term-bar span { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--border); }
+  .term .report { padding: 0.8rem 0.95rem; overflow-x: auto; }
+  /* Phone screenshot (TamaDroid) */
+  .phone {
+    display: block;
+    max-width: 20rem;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+  .links { display: flex; gap: 1.25rem; margin: 0; font-size: 0.9rem; }
+  .links a { color: var(--accent); }
   .flow {
     display: block;
     background: var(--card);
