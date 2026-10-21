@@ -7,21 +7,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const cities = [
   {
-    flags: ['🇱🇦'],
+    flags: ['la'],
     city: 'Laos — Luang Prabang & Vientiane',
     period: 'the beginning',
     roles: ['Hotel Sales'],
     note: 'Fresh out of NUS with an economics degree and a suitcase. Sold rooms, learned Lao, learned which promises a hotel actually keeps.',
   },
   {
-    flags: ['🇨🇭'],
+    flags: ['ch'],
     city: 'Switzerland',
     period: 'hotel school',
     roles: [],
     note: 'Traded selling rooms for studying them properly.',
   },
   {
-    flags: ['🇲🇻', '🇲🇾', '🇹🇭'],
+    flags: ['mv', 'my', 'th'],
     city: 'Maldives · Kuala Lumpur · Bangkok',
     period: '2014 — 2016',
     roles: [
@@ -31,15 +31,23 @@ const cities = [
     note: 'A management trainee is a suitcase with a job title. Ended up running monthly P&Ls and credit control in KL.',
   },
   {
-    flags: ['🇭🇰'],
-    stamps: ['🇻🇳 Vietnam', '🇮🇩 Indonesia', '🇹🇭 Thailand', '🇦🇪 Dubai', '🇰🇷 Korea', '🇦🇺 Australia', '🇨🇳 China'],
+    flags: ['hk'],
+    stamps: [
+      { code: 'vn', name: 'Vietnam' },
+      { code: 'id', name: 'Indonesia' },
+      { code: 'th', name: 'Thailand' },
+      { code: 'ae', name: 'Dubai' },
+      { code: 'kr', name: 'Korea' },
+      { code: 'au', name: 'Australia' },
+      { code: 'cn', name: 'China' },
+    ],
     city: 'Hong Kong — The Wandering Auditor',
     period: '2016 — 2018',
     roles: ['MOR Leader (Internal Audit), Finance · Hyatt'],
     note: 'Two years auditing hotel finance operations across seven countries. Hotels opened their books; I brought the skepticism.',
   },
   {
-    flags: ['🇨🇳'],
+    flags: ['cn'],
     city: 'Shanghai',
     period: '2018 — 2023',
     roles: [
@@ -49,7 +57,7 @@ const cities = [
     note: 'Learned the craft here, with colleagues who made it fun — and my wife opened a kopi shop, so Shanghai stays on the route.',
   },
   {
-    flags: ['🇭🇰'],
+    flags: ['hk'],
     city: 'Hong Kong, again',
     period: '2023 — now',
     roles: [
@@ -61,10 +69,10 @@ const cities = [
 ];
 
 const wherenow = [
-  { label: 'Base camp', value: 'Shenzhen' },
-  { label: 'Work', value: 'Hong Kong' },
-  { label: 'Home', value: 'Singapore' },
-  { label: 'Heart', value: 'Shanghai' },
+  { flag: 'cn', label: 'Base camp', value: 'Shenzhen' },
+  { flag: 'hk', label: 'Work', value: 'Hong Kong' },
+  { flag: 'sg', label: 'Home', value: 'Singapore' },
+  { flag: 'cn', label: 'Heart', value: 'Shanghai' },
 ];
 
 // TODO(you): replace with how you actually want to be contacted.
@@ -100,7 +108,11 @@ const contact = {
       {cities.map((c, i) => (
         <div class:list={['stop', i === 0 && 'open']}>
           <button type="button" class="stop-head" aria-expanded={i === 0 ? 'true' : 'false'}>
-            <span class="flags">{c.flags.join(' ')}</span>
+            <span class="flags">
+              {c.flags.map((f) => (
+                <img class="flag" src={`/flags/${f}.svg`} alt="" width="24" height="16" />
+              ))}
+            </span>
             <span class="stop-name">{c.city}</span>
             <span class="period">{c.period}</span>
             <span class="chev" aria-hidden="true">▾</span>
@@ -114,7 +126,12 @@ const contact = {
               )}
               {c.stamps && (
                 <p class="stamps">
-                  {c.stamps.map((s) => <span class="stamp">{s}</span>)}
+                  {c.stamps.map((s) => (
+                    <span class="stamp">
+                      <img class="flag" src={`/flags/${s.code}.svg`} alt="" width="18" height="12" />
+                      {s.name}
+                    </span>
+                  ))}
                 </p>
               )}
               <p class="city-note">{c.note}</p>
@@ -129,7 +146,10 @@ const contact = {
     <h2>Where things are now</h2>
     <ul class="wherenow">
       {wherenow.map((n) => (
-        <li><span class="chip-label">{n.label}</span><strong>{n.value}</strong></li>
+        <li>
+          <img class="flag" src={`/flags/${n.flag}.svg`} alt="" width="20" height="13" />
+          <span class="chip-label">{n.label}</span><strong>{n.value}</strong>
+        </li>
       ))}
     </ul>
     <p class="city-note">
@@ -216,10 +236,20 @@ const contact = {
   }
   .chip-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.45rem; }
 
-  /* Flags & audit stamps */
-  .flags { font-size: 1.15rem; letter-spacing: 0.12em; }
+  /* Flags & audit stamps — real SVG images (Windows can't show flag emoji) */
+  .flags { display: inline-flex; gap: 0.25rem; align-items: center; }
+  .flag {
+    height: 0.95em;
+    width: auto;
+    border-radius: 2px;
+    outline: 1px solid var(--border);
+    vertical-align: -0.1em;
+  }
   .stamps { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.55rem 0 0.25rem; padding: 0; }
   .stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     border: 1px dashed var(--border);
     border-radius: 999px;
     padding: 0.18rem 0.65rem;
@@ -227,6 +257,7 @@ const contact = {
     color: var(--muted);
     background: var(--card);
   }
+  .wherenow li { display: flex; align-items: center; gap: 0.45rem; }
 
   /* Scroll-reveal removed — stops now expand on hover/tap. */
 </style>
