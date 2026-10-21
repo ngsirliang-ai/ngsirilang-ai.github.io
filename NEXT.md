@@ -46,6 +46,11 @@ see the personal-site skill). Preview for William: `desktop_preview` open
       Design the DARK theme as canonical (departure-board amber-on-black is
       the brand), derive light from it; keep prefers-color-scheme for first
       visit; add a sun/moon toggle in the header persisted to localStorage.
+      **2026-10-22 audit (see DESIGN-AUDIT.md, JeV-graded):** naive auto-light
+      scored 0.02/0.98 — worst element on the site. Revised: go DARK-ONLY
+      until light is deliberately designed (v2), then add the toggle.
+      Other P0s: hero value-prop headline, mobile clamps, mono board
+      typography, unified project card surfaces.
 - [ ] Shader hero island (shaders/js) — ONE effect, after design pass.
 - [ ] Nice-to-have: OG/meta tags + preview image, favicon set, sitemap.
 
