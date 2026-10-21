@@ -12,5 +12,5 @@ import { defineConfig } from 'astro/config';
 // `site` should be your final public URL — Astro uses it to build
 // absolute links (and later the sitemap/RSS feed).
 export default defineConfig({
-  site: 'https://ngsirilang-ai.github.io',
+  site: 'https://ngsirliang-ai.github.io',
 });
