@@ -65,6 +65,8 @@
     :global(.site-footer) { padding-bottom: 4.5rem; }
   }
 
+  #chat-panel[hidden] { display: none; } /* hidden must win over display:flex — fixes X-to-close */
+
   /* Panel */
   #chat-panel {
     position: fixed;
