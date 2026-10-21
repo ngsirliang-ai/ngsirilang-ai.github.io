@@ -94,26 +94,32 @@ const contact = {
   <section>
     <h2>The route so far</h2>
     <p class="city-note" style="margin-top: -0.5rem;">
-      The wandering auditor's log — scroll down, the stamps fill in.
+      The wandering auditor's log — hover or tap a stop to open it.
     </p>
     <div class="cities">
-      {cities.map((c) => (
-        <div class="city">
-          <div class="city-head">
-            <h3><span class="flags">{c.flags.join(' ')}</span> {c.city}</h3>
+      {cities.map((c, i) => (
+        <div class:list={['stop', i === 0 && 'open']}>
+          <button type="button" class="stop-head" aria-expanded={i === 0 ? 'true' : 'false'}>
+            <span class="flags">{c.flags.join(' ')}</span>
+            <span class="stop-name">{c.city}</span>
             <span class="period">{c.period}</span>
+            <span class="chev" aria-hidden="true">▾</span>
+          </button>
+          <div class="stop-body">
+            <div class="stop-inner">
+              {c.roles.length > 0 && (
+                <ul class="roles">
+                  {c.roles.map((r) => <li>{r}</li>)}
+                </ul>
+              )}
+              {c.stamps && (
+                <p class="stamps">
+                  {c.stamps.map((s) => <span class="stamp">{s}</span>)}
+                </p>
+              )}
+              <p class="city-note">{c.note}</p>
+            </div>
           </div>
-          {c.roles.length > 0 && (
-            <ul class="roles">
-              {c.roles.map((r) => <li>{r}</li>)}
-            </ul>
-          )}
-          {c.stamps && (
-            <p class="stamps">
-              {c.stamps.map((s) => <span class="stamp">{s}</span>)}
-            </p>
-          )}
-          <p class="city-note">{c.note}</p>
         </div>
       ))}
     </div>
@@ -141,26 +147,60 @@ const contact = {
 </BaseLayout>
 
 <style>
-  /* City chapters — a travel-log version of the old timeline */
-  .cities { display: flex; flex-direction: column; gap: 1.9rem; margin: 1.5rem 0; }
-  .city {
+  /* City stops — collapsed headers that expand on hover (desktop) or tap.
+     The .stop-body uses the grid 0fr→1fr trick: CSS can't animate
+     height:auto, but it CAN animate a grid row from 0 to 1 fraction. */
+  .cities { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.5rem 0; }
+  .stop {
     border-left: 2px solid var(--border);
-    padding-left: 1.25rem;
+    padding: 0 0 0 1.1rem;
     position: relative;
+    border-radius: 0 0.5rem 0.5rem 0;
   }
-  .city::before {
+  .stop::before {
     content: "";
     position: absolute;
     left: -5px;
-    top: 0.5rem;
+    top: 1.05rem;
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--border);
+    transition: background 0.3s ease;
   }
-  .city-head { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; }
-  .city-head h3 { margin: 0; font-size: 1.05rem; }
-  .period { font-size: 0.85rem; color: var(--muted); }
+  .stop.open::before { background: var(--accent); }
+  .stop-head {
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.65rem 0.25rem;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+  .stop-head:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0.35rem; }
+  .stop-name { font-weight: 600; font-size: 1.02rem; }
+  .stop-head .period { margin-left: auto; white-space: nowrap; }
+  .chev {
+    font-size: 0.8rem;
+    color: var(--muted);
+    transition: transform 0.35s ease;
+  }
+  .stop.open .chev { transform: rotate(180deg); }
+  .stop-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s ease;
+  }
+  .stop.open .stop-body { grid-template-rows: 1fr; }
+  .stop-inner { overflow: hidden; min-height: 0; }
+  .stop-inner .roles { margin-top: 0.15rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .stop-body, .chev, .stop::before { transition: none; }
+  }
   .roles { list-style: none; margin: 0.6rem 0 0.4rem; padding: 0; }
   .roles li { font-size: 0.925rem; color: var(--text); margin-bottom: 0.2rem; }
   .city-note { margin: 0.25rem 0 0; color: var(--muted); font-style: italic; font-size: 0.925rem; }
@@ -188,28 +228,31 @@ const contact = {
     background: var(--card);
   }
 
-  /* Scroll reveal — hidden only when JS is available (the .js class),
-     so no-JS visitors and search engines see everything. */
-  .js .city {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.55s ease, transform 0.55s ease;
-  }
-  .js .city.in { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) {
-    .js .city { transition: none; transform: none; }
-  }
+  /* Scroll-reveal removed — stops now expand on hover/tap. */
 </style>
 
 <script is:inline>
-  // Progressive enhancement: reveal each city chapter as it scrolls into view.
-  // IntersectionObserver = "tell me when this element enters the viewport".
-  document.documentElement.classList.add('js');
-  const io = new IntersectionObserver(
-    (entries) => entries.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-    }),
-    { threshold: 0.2 }
-  );
-  document.querySelectorAll('.city').forEach((c) => io.observe(c));
+  // Departure-board behavior:
+  //  - On devices with a real mouse (hover: hover): passing over a stop
+  //    opens it; moving away closes it again — unless you CLICK, which
+  //    pins it open. Click again to unpin.
+  //  - On touch: tap toggles. (No hover on phones, so clicks do all the work.)
+  const canHover = window.matchMedia('(hover: hover)').matches;
+  document.querySelectorAll('.stop-head').forEach((head) => {
+    const stop = head.closest('.stop');
+    const setOpen = (v) => {
+      stop.classList.toggle('open', v);
+      head.setAttribute('aria-expanded', String(v));
+    };
+    head.addEventListener('click', () => {
+      const opening = !stop.classList.contains('open');
+      setOpen(opening);
+      stop.classList.toggle('pinned', opening && canHover);
+    });
+    if (canHover) {
+      head.addEventListener('mouseenter', () => setOpen(true));
+      head.addEventListener('mouseleave', () =>
+        setOpen(stop.classList.contains('pinned')));
+    }
+  });
 </script>
