@@ -1,7 +1,9 @@
-# My Website
+# Sir Liang Ng — personal site
 
-Personal site for Sir Liang Ng — hotel feasibility by day, AI tinkerer by night.
+Hotel feasibility by day, AI tinkerer by night.
 Built with [Astro](https://astro.build), hosted free on GitHub Pages.
+
+**Live site:** https://ngsirliang-ai.github.io/
 
 ## Run it locally
 
