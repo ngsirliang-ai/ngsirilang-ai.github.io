@@ -7,31 +7,50 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const cities = [
   {
-    city: 'Singapore',
-    period: 'the beginning —',
+    flags: ['🇱🇦'],
+    city: 'Laos — Luang Prabang & Vientiane',
+    period: 'the beginning',
+    roles: ['Hotel Sales'],
+    note: 'Fresh out of NUS with an economics degree and a suitcase. Sold rooms, learned Lao, learned which promises a hotel actually keeps.',
+  },
+  {
+    flags: ['🇨🇭'],
+    city: 'Switzerland',
+    period: 'hotel school',
     roles: [],
-    note: 'Where the accent comes from. Still home for the parents — and the reason my phone gets haze updates from a robot I built.',
+    note: 'Traded selling rooms for studying them properly.',
   },
   {
-    city: 'Kuala Lumpur, Malaysia',
-    period: '2015 — 2018',
+    flags: ['🇲🇻', '🇲🇾', '🇹🇭'],
+    city: 'Maldives · Kuala Lumpur · Bangkok',
+    period: '2014 — 2016',
     roles: [
-      'Finance Manager · AVANI Hotels & Resorts',
-      'MOR Leader (Internal Audit), Finance · AVANI Hotels & Resorts',
+      'Management Trainee · Minor International — Anantara Maldives → AVANI KL → Bangkok office',
+      'Finance Manager · AVANI Hotels & Resorts, Kuala Lumpur',
     ],
-    note: 'Learned to read a P&L before most people learn to read a room.',
+    note: 'A management trainee is a suitcase with a job title. Ended up running monthly P&Ls and credit control in KL.',
   },
   {
-    city: 'Shanghai, China',
+    flags: ['🇭🇰'],
+    stamps: ['🇻🇳 Vietnam', '🇮🇩 Indonesia', '🇹🇭 Thailand', '🇦🇪 Dubai', '🇰🇷 Korea', '🇦🇺 Australia', '🇨🇳 China'],
+    city: 'Hong Kong — The Wandering Auditor',
+    period: '2016 — 2018',
+    roles: ['MOR Leader (Internal Audit), Finance · Hyatt'],
+    note: 'Two years auditing hotel finance operations across seven countries. Hotels opened their books; I brought the skepticism.',
+  },
+  {
+    flags: ['🇨🇳'],
+    city: 'Shanghai',
     period: '2018 — 2023',
     roles: [
       'Feasibility Manager, Real Estate & Development · Hyatt',
       'Senior Feasibility Manager · Hyatt',
     ],
-    note: 'Five years of asking beautiful hotel dreams what the numbers thought of them. Shanghai stuck — my wife runs a kopi shop there now.',
+    note: 'Learned the craft here, with colleagues who made it fun — and my wife opened a kopi shop, so Shanghai stays on the route.',
   },
   {
-    city: 'Hong Kong SAR',
+    flags: ['🇭🇰'],
+    city: 'Hong Kong, again',
     period: '2023 — now',
     roles: [
       'Senior Feasibility Manager · Hyatt',
@@ -59,29 +78,40 @@ const contact = {
   <section class="hero">
     <h1>About</h1>
     <p class="lede">
-      Singaporean, currently on loan to Hong Kong. I run feasibility for hotel
-      deals at Hyatt — on paper that's market studies and investment models; in
-      practice it's being the person who tells excited people their dream hotel
-      should stay a dream. Ten years and four cities in, I still can't walk
-      past a building site without estimating the room rate. Off duty I build
-      small AI tools and automations — this site is where they live.
+      Singaporean, currently on loan to Hong Kong. I started out selling hotel
+      rooms in Laos; these days I decide which hotel rooms get to exist —
+      feasibility for Hyatt deals, which on paper is market studies and
+      investment models, and in practice is telling excited people their dream
+      hotel should stay a dream. In between: hotel school in Switzerland,
+      finance in Malaysia and the Maldives, and two years as a wandering
+      auditor stamping through seven countries. I still can't walk past a
+      building site without estimating the room rate. Off duty I build small
+      AI tools and automations — this site is where they live.
     </p>
     <p class="lede">English · 中文 · ไทย · ລາວ</p>
   </section>
 
   <section>
     <h2>The route so far</h2>
+    <p class="city-note" style="margin-top: -0.5rem;">
+      The wandering auditor's log — scroll down, the stamps fill in.
+    </p>
     <div class="cities">
       {cities.map((c) => (
         <div class="city">
           <div class="city-head">
-            <h3>{c.city}</h3>
+            <h3><span class="flags">{c.flags.join(' ')}</span> {c.city}</h3>
             <span class="period">{c.period}</span>
           </div>
           {c.roles.length > 0 && (
             <ul class="roles">
               {c.roles.map((r) => <li>{r}</li>)}
             </ul>
+          )}
+          {c.stamps && (
+            <p class="stamps">
+              {c.stamps.map((s) => <span class="stamp">{s}</span>)}
+            </p>
           )}
           <p class="city-note">{c.note}</p>
         </div>
@@ -145,4 +175,41 @@ const contact = {
     font-size: 0.9rem;
   }
   .chip-label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.45rem; }
+
+  /* Flags & audit stamps */
+  .flags { font-size: 1.15rem; letter-spacing: 0.12em; }
+  .stamps { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.55rem 0 0.25rem; padding: 0; }
+  .stamp {
+    border: 1px dashed var(--border);
+    border-radius: 999px;
+    padding: 0.18rem 0.65rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: var(--card);
+  }
+
+  /* Scroll reveal — hidden only when JS is available (the .js class),
+     so no-JS visitors and search engines see everything. */
+  .js .city {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .js .city.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .city { transition: none; transform: none; }
+  }
 </style>
+
+<script is:inline>
+  // Progressive enhancement: reveal each city chapter as it scrolls into view.
+  // IntersectionObserver = "tell me when this element enters the viewport".
+  document.documentElement.classList.add('js');
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }),
+    { threshold: 0.2 }
+  );
+  document.querySelectorAll('.city').forEach((c) => io.observe(c));
+</script>
