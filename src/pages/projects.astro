@@ -73,7 +73,6 @@ const projects = [
           <button class="nav next" type="button" data-next aria-label="Next screenshot">→</button>
         </div>
         <div class="info">
-          <p class="status">{p.status}</p>
           <h2>{p.name}</h2>
           <p class="tagline">{p.tagline}</p>
           <p class="desc">{p.description}</p>
@@ -88,13 +87,19 @@ const projects = [
 </BaseLayout>
 
 <style>
-  .projects { display: flex; flex-direction: column; gap: 2.25rem; margin-top: 2rem; }
+  .projects { display: flex; flex-direction: column; gap: 2rem; margin-top: 2rem; }
   .project {
     display: grid;
     grid-template-columns: minmax(0, 17rem) 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
     align-items: start;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background: var(--card);
+    padding: 1.25rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
+  .project:hover { border-color: #3d434d; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); }
   @media (max-width: 640px) {
     .project { grid-template-columns: 1fr; }
   }
@@ -136,7 +141,14 @@ const projects = [
     flex: 0 0 100%;
     scroll-snap-align: start;
   }
-  .strip-item img { display: block; width: 100%; height: auto; }
+  .strip-item img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    filter: brightness(0.94) saturate(0.88);
+  }
   .nav {
     position: absolute;
     top: 55%;
@@ -169,19 +181,8 @@ const projects = [
     font-size: 0.88rem;
   }
   .demo-btn:hover { filter: brightness(1.1); }
-  .status {
-    display: inline-block;
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 0.15rem 0.6rem;
-    margin: 0 0 0.75rem;
-  }
   .info h2 { margin: 0 0 0.15rem; font-size: 1.35rem; letter-spacing: -0.01em; }
-  .tagline { margin: 0 0 0.75rem; color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+  .tagline { margin: 0 0 0.75rem; color: var(--text); opacity: 0.85; font-weight: 600; font-size: 0.95rem; }
   .desc { margin: 0 0 0.9rem; }
   .stack {
     margin: 0;

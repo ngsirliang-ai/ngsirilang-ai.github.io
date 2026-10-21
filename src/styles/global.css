@@ -7,26 +7,17 @@
    3. Header / footer                 4. Page-specific pieces
    ───────────────────────────────────────────────────────────────────── */
 
-/* 1. Design tokens — change colors here, everything follows */
+/* 1. Design tokens — change colors here, everything follows.
+   Dark-only by design (2026-10-22 audit): amber-on-black departure-board IS
+   the brand; a deliberate light "day mode" arrives with the design pass. */
 :root {
-  --bg: #faf9f7;
-  --text: #22252b;
-  --muted: #667085;
-  --card: #ffffff;
-  --border: #e6e4df;
-  --accent: #9a6b2f; /* warm brass — placeholder until the design pass */
-}
-
-/* Respect visitors who prefer dark mode (uses the same token names) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14161a;
-    --text: #e8e6e1;
-    --muted: #9aa0aa;
-    --card: #1c1f24;
-    --border: #2a2e35;
-    --accent: #d9a55c;
-  }
+  color-scheme: dark; /* browser chrome (scrollbars) follows the theme */
+  --bg: #14161a;
+  --text: #e8e6e1;
+  --muted: #9aa0aa;
+  --card: #1c1f24;
+  --border: #2a2e35;
+  --accent: #d9a55c; /* bright brass for dark surfaces */
 }
 
 /* 2. Base */
@@ -39,6 +30,9 @@ body {
   color: var(--text);
   line-height: 1.65;
 }
+
+/* Links default to the brand accent (kills browser-blue) */
+a { color: var(--accent); }
 
 /* 3. Header / footer */
 .site-header {
@@ -59,7 +53,9 @@ body {
 }
 
 .site-header nav a {
+  display: inline-block;
   margin-left: 1.1rem;
+  padding: 0.5rem 0;
   color: var(--muted);
   text-decoration: none;
 }
@@ -73,6 +69,8 @@ body {
   color: var(--muted);
   font-size: 0.875rem;
 }
+.site-footer a { color: var(--muted); text-decoration: none; }
+.site-footer a:hover { color: var(--accent); }
 
 /* 4. Shared page pieces */
 .container {
@@ -81,23 +79,24 @@ body {
   padding: 0 1.25rem 2rem;
 }
 
-.hero { padding: 4rem 0 1.5rem; }
+.hero { padding: clamp(2.2rem, 6vw, 4rem) 0 1.25rem; }
 .hero h1 {
-  font-size: 2.6rem;
+  font-size: clamp(2.05rem, 6.5vw, 2.6rem);
   letter-spacing: -0.02em;
   margin: 0 0 0.4rem;
 }
 .tagline { color: var(--accent); font-weight: 600; margin: 0 0 1.25rem; }
-.lede { font-size: 1.15rem; color: var(--muted); max-width: 38rem; }
+.lede { font-size: 1.08rem; color: var(--muted); max-width: 38rem; }
 
 /* Pillar cards on the homepage */
 .pillars {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  margin-top: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  margin-top: 2rem;
 }
 .card {
+  position: relative;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 0.75rem;
@@ -106,6 +105,16 @@ body {
   color: var(--text);
 }
 .card:hover { border-color: var(--accent); }
+.card::after {
+  content: "→";
+  position: absolute;
+  top: 1.2rem;
+  right: 1.1rem;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.card:hover::after { opacity: 1; transform: translateX(3px); }
 .card h2 { font-size: 1.05rem; margin: 0.15rem 0 0.5rem; }
 .card p { margin: 0; color: var(--muted); font-size: 0.925rem; }
 
