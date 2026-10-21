@@ -9,9 +9,14 @@ const projects = [
   {
     name: 'HomeSignal',
     tagline: 'Singapore HDB resale monitor',
-    image: '/projects/homesignal.png',
+    demo: 'https://homesignal-jtsvt8ik.manus.space',
+    images: [
+      '/projects/homesignal-1.png',
+      '/projects/homesignal-2.png',
+      '/projects/homesignal-3.png',
+    ],
     alt: 'HomeSignal dashboard: KPI cards, resale index chart, hot districts panel',
-    status: 'Private build',
+    status: 'Live · code private',
     description:
       'Where value is moving. A monitor for Singapore\u2019s HDB resale market built on ' +
       'government open data \u2014 median prices, transaction volumes, the resale index trend, ' +
@@ -22,14 +27,19 @@ const projects = [
   {
     name: 'Singapore Pulse',
     tagline: 'The island, right now',
-    image: '/projects/sgpulse.png',
+    demo: 'https://sgpulse-ffwokvzv.manus.space',
+    images: [
+      '/projects/sgpulse-1.png',
+      '/projects/sgpulse-2.png',
+      '/projects/sgpulse-3.png',
+    ],
     alt: 'Singapore Pulse site: live signal cards for weather and air quality',
-    status: 'Private build',
+    status: 'Live · code private',
     description:
       'Singapore, right now. An editorial live-signal board for the island \u2014 weather, ' +
-      'air quality, and whatever else data.gov.sg will tell us, laid out as scannable ' +
-      'cards instead of a dashboard. Sister project to the haze monitor my family ' +
-      'gets on Telegram.',
+      'air quality, carparks, and whatever else data.gov.sg will tell us, laid out as ' +
+      'scannable cards instead of a dashboard. Sister project to the haze monitor my ' +
+      'family gets on Telegram.',
     stack: 'Vite \u00b7 TypeScript \u00b7 government open APIs',
   },
 ];
@@ -47,9 +57,20 @@ const projects = [
   <div class="projects">
     {projects.map((p) => (
       <article class="project">
-        <div class="shot" aria-hidden="true">
-          <div class="shot-bar"><span></span><span></span><span></span></div>
-          <img src={p.image} alt={p.alt} loading="lazy" />
+        <div class="shot">
+          <div class="shot-bar">
+            <span></span><span></span><span></span>
+            <a class="shot-link" href={p.demo} target="_blank" rel="noopener">Live demo ↗</a>
+          </div>
+          <div class="strip" data-strip>
+            {p.images.map((src, i) => (
+              <a class="strip-item" href={p.demo} target="_blank" rel="noopener" aria-label={`Open ${p.name} live`}>
+                <img src={src} alt={`${p.alt} (view ${i + 1})`} loading={i === 0 ? 'eager' : 'lazy'} />
+              </a>
+            ))}
+          </div>
+          <button class="nav prev" type="button" data-prev aria-label="Previous screenshot">←</button>
+          <button class="nav next" type="button" data-next aria-label="Next screenshot">→</button>
         </div>
         <div class="info">
           <p class="status">{p.status}</p>
@@ -57,6 +78,7 @@ const projects = [
           <p class="tagline">{p.tagline}</p>
           <p class="desc">{p.description}</p>
           <p class="stack">{p.stack}</p>
+          <a class="demo-btn" href={p.demo} target="_blank" rel="noopener">Open the live app ↗</a>
         </div>
       </article>
     ))}
@@ -77,6 +99,7 @@ const projects = [
     .project { grid-template-columns: 1fr; }
   }
   .shot {
+    position: relative;
     border: 1px solid var(--border);
     border-radius: 0.6rem;
     overflow: hidden;
@@ -84,6 +107,7 @@ const projects = [
   }
   .shot-bar {
     display: flex;
+    align-items: center;
     gap: 0.3rem;
     padding: 0.45rem 0.6rem;
     border-bottom: 1px solid var(--border);
@@ -94,7 +118,57 @@ const projects = [
     border-radius: 50%;
     background: var(--border);
   }
-  .shot img { display: block; width: 100%; height: auto; }
+  .shot-link {
+    margin-left: auto;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .shot-link:hover { color: var(--accent); }
+  .strip {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+  }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip-item {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
+  .strip-item img { display: block; width: 100%; height: auto; }
+  .nav {
+    position: absolute;
+    top: 55%;
+    transform: translateY(-50%);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+  .nav:hover { border-color: var(--accent); color: var(--accent); }
+  .nav.prev { left: 0.5rem; }
+  .nav.next { right: 0.5rem; }
+  .demo-btn {
+    display: inline-block;
+    margin-top: 0.25rem;
+    padding: 0.45rem 0.95rem;
+    border-radius: 0.5rem;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+  .demo-btn:hover { filter: brightness(1.1); }
   .status {
     display: inline-block;
     font-size: 0.72rem;
@@ -116,3 +190,17 @@ const projects = [
     color: var(--muted);
   }
 </style>
+
+<script is:inline>
+  // Carousel: each .strip scrolls horizontally with snap; the ←/→ buttons
+  // nudge it by one card-width. Respects prefers-reduced-motion.
+  const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-strip]').forEach((strip) => {
+    const shot = strip.closest('.shot');
+    const step = () => strip.clientWidth;
+    shot.querySelector('[data-prev]').addEventListener('click', () =>
+      strip.scrollBy({ left: -step(), behavior: smooth ? 'smooth' : 'auto' }));
+    shot.querySelector('[data-next]').addEventListener('click', () =>
+      strip.scrollBy({ left: step(), behavior: smooth ? 'smooth' : 'auto' }));
+  });
+</script>
