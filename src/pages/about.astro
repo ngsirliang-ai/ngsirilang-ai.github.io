@@ -250,8 +250,11 @@ const contact = {
       stop.classList.toggle('pinned', opening && canHover);
     });
     if (canHover) {
-      head.addEventListener('mouseenter', () => setOpen(true));
-      head.addEventListener('mouseleave', () =>
+      // Listen on the WHOLE stop (head + expanded body), so moving the
+      // mouse from the header into the details keeps it open — it only
+      // closes when the cursor leaves the entire stop.
+      stop.addEventListener('mouseenter', () => setOpen(true));
+      stop.addEventListener('mouseleave', () =>
         setOpen(stop.classList.contains('pinned')));
     }
   });
