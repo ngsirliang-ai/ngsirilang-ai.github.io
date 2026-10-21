@@ -86,30 +86,6 @@ line B    06 07 09 18 19 46   (+34)
     <p class="flow-label">How it runs</p>
     <code class="flow">HKJC / SSQ draw history → data cleaning → JEV-scored frequency × recency → evidence-backed candidate lines</code>
   </article>
-
-  <article class="automation">
-    <h2>TamaDroid</h2>
-
-    <div class="preview">
-      <img class="phone" src="/projects/tamadroid-1.png" alt="TamaDroid running on an Android phone: a Tamagotchi creature alive on the emulated LCD" width="393" height="480" />
-      <p class="preview-note">Running on a real phone · demo clip on YouTube</p>
-    </div>
-
-    <p>
-      A working Tamagotchi P1/P2 emulator for Android — the TamaLib engine
-      compiled in through the NDK, with a home-screen widget so the creature
-      is one glance away. Part of a wider habit of taking AI toys apart:
-      the companion exploration probes a Folotoy's firmware the same way.
-    </p>
-
-    <p class="links">
-      <a href="https://youtube.com/shorts/tBHBIujZzkU" target="_blank" rel="noopener">Watch the demo ↗</a>
-      <a href="https://github.com/twelvehouse/TamaDroid/releases" target="_blank" rel="noopener">APK on GitHub ↗</a>
-    </p>
-
-    <p class="flow-label">How it runs</p>
-    <code class="flow">TamaLib emulator core (C, GPLv2) → Android NDK / JNI → home-screen widget · GPLv2</code>
-  </article>
 </BaseLayout>
 
 <style>
@@ -143,17 +119,6 @@ line B    06 07 09 18 19 46   (+34)
   .term-bar { display: flex; gap: 0.3rem; padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); }
   .term-bar span { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--border); }
   .term .report { padding: 0.8rem 0.95rem; overflow-x: auto; }
-  /* Phone screenshot (TamaDroid) */
-  .phone {
-    display: block;
-    max-width: 20rem;
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-  }
-  .links { display: flex; gap: 1.25rem; margin: 0; font-size: 0.9rem; }
-  .links a { color: var(--accent); }
   .flow {
     display: block;
     background: var(--card);
