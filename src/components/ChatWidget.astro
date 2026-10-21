@@ -1,0 +1,312 @@
+---
+// ChatWidget — floating navigation assistant on every page.
+// Phase A (now): scripted brain, pure client-side, no backend.
+// Phase B (later): set RELAY_URL to the Cloudflare Worker and
+// "connect" messages get relayed to Telegram. Until then the
+// connect flow falls back to email + LinkedIn.
+//
+// Learning notes:
+//  - This is a component with its own scoped styles + a vanilla script.
+//  - The "brain" is an array of intents: keywords -> reply (+ optional
+//    navigation). A real LLM upgrade later only replaces `think()`.
+---
+
+<!-- The launcher button -->
+<button type="button" id="chat-launcher" aria-label="Open chat" aria-expanded="false">
+  <span aria-hidden="true">💬</span>
+  <span class="chat-launcher-label">Ask me</span>
+</button>
+
+<!-- The chat panel -->
+<div id="chat-panel" role="dialog" aria-label="Chat assistant" hidden>
+  <div class="chat-head">
+    <strong>Site guide</strong>
+    <button type="button" id="chat-close" aria-label="Close chat">✕</button>
+  </div>
+
+  <div id="chat-log" aria-live="polite"></div>
+
+  <div id="chat-chips" class="chat-chips"></div>
+
+  <form id="chat-form">
+    <input type="text" id="chat-input" autocomplete="off"
+           placeholder="Ask about projects, William, hazes…" aria-label="Your message" />
+    <button type="submit" aria-label="Send">➤</button>
+  </form>
+
+  <!-- honeypot for future spam bots (real blocking comes with the Worker) -->
+  <input type="text" id="chat-hp" tabindex="-1" autocomplete="off" hidden />
+</div>
+
+<style>
+  /* Launcher — bottom right, works in both themes via the site's tokens */
+  #chat-launcher {
+    position: fixed;
+    right: 1.1rem;
+    bottom: 1.1rem;
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.9rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  }
+  #chat-launcher:hover { border-color: var(--accent); }
+
+  /* Panel */
+  #chat-panel {
+    position: fixed;
+    right: 1.1rem;
+    bottom: 4.6rem;
+    z-index: 60;
+    width: min(21rem, calc(100vw - 2.2rem));
+    max-height: min(30rem, 70vh);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background: var(--card);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+    overflow: hidden;
+  }
+  .chat-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .chat-head button {
+    all: unset;
+    cursor: pointer;
+    color: var(--muted);
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.3rem;
+  }
+  .chat-head button:hover { color: var(--text); }
+
+  #chat-log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.8rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .msg { max-width: 88%; padding: 0.5rem 0.7rem; border-radius: 0.7rem; font-size: 0.88rem; line-height: 1.45; }
+  .msg.bot { background: var(--bg); border: 1px solid var(--border); border-bottom-left-radius: 0.2rem; align-self: flex-start; }
+  .msg.user { background: var(--accent); color: #fff; border-bottom-right-radius: 0.2rem; align-self: flex-end; }
+  .msg a { color: var(--accent); }
+
+  /* The connect mini-form rendered inside the log */
+  .msg form { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.4rem; }
+  .msg input, .msg textarea {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 0.45rem;
+    background: var(--card);
+    color: var(--text);
+  }
+  .msg button {
+    font: inherit;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 0.45rem;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.45rem 0.7rem;
+    cursor: pointer;
+  }
+
+  .chat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0 0.9rem 0.6rem;
+  }
+  .chat-chips button {
+    font: inherit;
+    font-size: 0.76rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 0.25rem 0.65rem;
+    cursor: pointer;
+  }
+  .chat-chips button:hover { border-color: var(--accent); color: var(--text); }
+
+  #chat-form { display: flex; gap: 0.45rem; padding: 0.7rem 0.9rem; border-top: 1px solid var(--border); }
+  #chat-form input {
+    flex: 1;
+    font: inherit;
+    font-size: 0.88rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background: var(--bg);
+    color: var(--text);
+  }
+  #chat-form button {
+    all: unset;
+    cursor: pointer;
+    color: var(--accent);
+    padding: 0 0.4rem;
+    font-size: 1.05rem;
+  }
+</style>
+
+<script is:inline>
+  // ── Configuration ────────────────────────────────────────────────
+  // Phase B: set this to the Cloudflare Worker URL and connect-
+  // messages get relayed to Telegram. Empty = fallback to links.
+  const RELAY_URL = '';
+
+  // ── The scripted brain ───────────────────────────────────────────
+  const INTENTS = [
+    {
+      keys: ['project', 'work', 'build', 'portfolio', 'homesignal', 'pulse', 'dashboard', 'app'],
+      reply: 'William builds small AI tools — the standouts are <strong>HomeSignal</strong> (Singapore HDB resale monitor) and <strong>Singapore Pulse</strong> (live island signals). Both have live demos. Taking you there…',
+      go: '/projects/',
+    },
+    {
+      keys: ['automation', 'haze', 'psi', 'telegram', 'bot', 'monitor'],
+      reply: 'The <strong>SG Haze Monitor</strong> is his favourite automation — his parents in Singapore get PSI readings on Telegram twice a day, plus alerts. You can see the actual message format. Taking you there…',
+      go: '/automations/',
+    },
+    {
+      keys: ['who', 'about', 'background', 'career', 'william', 'liang', 'hyatt', 'auditor', 'feasibility', 'hotel'],
+      reply: 'Short version: hotel feasibility director at Hyatt in Hong Kong, ex wandering auditor (7 countries), started in hotel sales in Laos. The full route is a fun scroll. Taking you there…',
+      go: '/about/',
+    },
+    {
+      keys: ['writing', 'blog', 'post', 'article', 'read'],
+      reply: 'The writing section is being stocked — feasibility practice, APAC hotel markets, and building automations as a non-developer. Taking you there…',
+      go: '/writing/',
+    },
+    {
+      keys: ['contact', 'connect', 'email', 'reach', 'talk', 'message', 'hire', 'job', 'linkedin'],
+      reply: '__CONNECT__',
+    },
+  ];
+
+  const FALLBACK = 'I\'m a simple guide — try asking about <em>projects</em>, the <em>haze monitor</em>, <em>who William is</em>, or say <em>connect</em> to reach him.';
+
+  // ── Widget plumbing (open/close, render, submit) ────────────────
+  const launcher = document.getElementById('chat-launcher');
+  const panel = document.getElementById('chat-panel');
+  const log = document.getElementById('chat-log');
+  const chips = document.getElementById('chat-chips');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+
+  function say(text, who) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + who;
+    div.innerHTML = text;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+    return div;
+  }
+
+  function think(text) {
+    const t = text.toLowerCase();
+    for (const intent of INTENTS) {
+      if (intent.keys.some((k) => t.includes(k))) return intent;
+    }
+    return null;
+  }
+
+  function handleConnect() {
+    const box = say(
+      'Want to reach William? Leave a message and it lands on his Telegram. ' +
+      (RELAY_URL ? '' : '(Direct relay is coming soon — for now this reaches him by email.)'),
+      'bot'
+    );
+    const f = document.createElement('form');
+    f.innerHTML =
+      '<input name="name" placeholder="Your name" required />' +
+      '<textarea name="text" rows="3" placeholder="Your message" required></textarea>' +
+      '<button type="submit">Send to William ➤</button>';
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = f.name.value.trim();
+      const text = f.text.value.trim();
+      if (!name || !text) return;
+      f.querySelector('button').disabled = true;
+      try {
+        if (RELAY_URL) {
+          await fetch(RELAY_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, text, page: location.pathname }),
+          });
+          say('Delivered ✓ — William will see it on Telegram and reply to you by email.', 'bot');
+        } else {
+          location.href = 'mailto:hello@example.com?subject=' +
+            encodeURIComponent('Site message from ' + name) +
+            '&body=' + encodeURIComponent(text);
+          say('Opening your email app… (a direct-to-Telegram relay is coming soon.)', 'bot');
+        }
+      } catch (err) {
+        say('Hmm, that didn\'t send. Please email William directly instead.', 'bot');
+      }
+      f.remove();
+    });
+    box.appendChild(f);
+  }
+
+  function respond(text) {
+    const intent = think(text);
+    if (!intent) { say(FALLBACK, 'bot'); return; }
+    if (intent.reply === '__CONNECT__') { handleConnect(); return; }
+    say(intent.reply, 'bot');
+    if (intent.go) setTimeout(() => { location.href = intent.go; }, 1400);
+  }
+
+  // quick chips
+  const CHIPS = ['Projects', 'Who is William?', 'Haze monitor', 'Connect'];
+  CHIPS.forEach((c) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = c;
+    b.addEventListener('click', () => { say(c, 'user'); respond(c); });
+    chips.appendChild(b);
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    say(text, 'user');
+    input.value = '';
+    respond(text);
+  });
+
+  launcher.addEventListener('click', () => {
+    const open = panel.hidden;
+    panel.hidden = !open;
+    launcher.setAttribute('aria-expanded', String(open));
+    if (open && log.children.length === 0) {
+      say('Hi! I\'m the site guide. Ask me about William\'s projects, his automation habit — or say <em>connect</em> to reach him.', 'bot');
+    }
+    if (open) input.focus();
+  });
+  document.getElementById('chat-close').addEventListener('click', () => {
+    panel.hidden = true;
+    launcher.setAttribute('aria-expanded', 'false');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !panel.hidden) { panel.hidden = true; launcher.focus(); }
+  });
+</script>

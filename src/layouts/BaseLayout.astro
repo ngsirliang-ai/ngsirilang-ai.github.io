@@ -7,6 +7,7 @@
 // The page's content lands where <slot /> is below.
 
 import '../styles/global.css';
+import ChatWidget from '../components/ChatWidget.astro';
 
 // Props: values a page passes in when it uses this layout.
 interface Props {
@@ -47,5 +48,7 @@ const {
     <footer class="site-footer">
       <p>© {new Date().getFullYear()} Sir Liang Ng · Built with <a href="https://astro.build">Astro</a></p>
     </footer>
+
+    <ChatWidget />
   </body>
 </html>
