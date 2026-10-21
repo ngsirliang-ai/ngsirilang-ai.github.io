@@ -56,3 +56,13 @@ practice, APAC hotel markets, and building automations as a non-developer.
 - Proxy needed for all github/npm traffic: http://127.0.0.1:7890
 - Next after unflag: Phase 2 (projects/automations content), then design pass
   (skills: claude-design + popular-web-designs), then shader hero island.
+- 2026-10-21 later: Manus projects exported to D:/Projects (13 dirs).
+  Pushed as PRIVATE repos under ngsirliang-ai: hdb-stats, live-stats-test,
+  reverse-engineer-anything, mark-six-predicter, games. Branch = master on
+  these (export default), site repo = main.
+- Site Projects pillar: first cards = HomeSignal (hdb-stats) + Singapore
+  Pulse (live-stats-test). Sip Club (games) EXCLUDED from site by William's
+  request (not mature) — stays in GitHub only. kopi-coffee not yet pushed.
+- Planned feature: site chatbot relaying to William's Telegram — V1 relay
+  (Cloudflare Worker + second BotFather bot; cannot reuse Jarv gateway bot,
+  polling conflict), V2 LLM auto-responder, V3 two-way live.

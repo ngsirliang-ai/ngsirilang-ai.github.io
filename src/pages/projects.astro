@@ -1,7 +1,38 @@
 ---
-// Pillar 2: AI hobbyist mini-projects. Stub for now — will become a
-// content collection (one Markdown file per project) in phase 2.
+// Pillar 2: AI hobbyist mini-projects.
+// Two real residents (HomeSignal, Singapore Pulse) with screenshots cropped
+// from live previews; more projects exist in private repos until they're
+// ready. The feasibility toolkit will be the signature piece.
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    name: 'HomeSignal',
+    tagline: 'Singapore HDB resale monitor',
+    image: '/projects/homesignal.png',
+    alt: 'HomeSignal dashboard: KPI cards, resale index chart, hot districts panel',
+    status: 'Private build',
+    description:
+      'Where value is moving. A monitor for Singapore\u2019s HDB resale market built on ' +
+      'government open data \u2014 median prices, transaction volumes, the resale index trend, ' +
+      'and which districts are running hot. The kind of analysis I do for hotels, ' +
+      'pointed at apartments.',
+    stack: 'Vite \u00b7 TypeScript \u00b7 data.gov.sg',
+  },
+  {
+    name: 'Singapore Pulse',
+    tagline: 'The island, right now',
+    image: '/projects/sgpulse.png',
+    alt: 'Singapore Pulse site: live signal cards for weather and air quality',
+    status: 'Private build',
+    description:
+      'Singapore, right now. An editorial live-signal board for the island \u2014 weather, ' +
+      'air quality, and whatever else data.gov.sg will tell us, laid out as scannable ' +
+      'cards instead of a dashboard. Sister project to the haze monitor my family ' +
+      'gets on Telegram.',
+    stack: 'Vite \u00b7 TypeScript \u00b7 government open APIs',
+  },
+];
 ---
 
 <BaseLayout title="AI Mini-Projects">
@@ -9,8 +40,79 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <h1>AI Mini-Projects</h1>
     <p class="lede">
       Small tools and experiments — built to learn, kept because they're useful.
-      The signature piece will be an interactive hotel feasibility toolkit.
+      A few live below; more sit in private repos until they've earned a spotlight.
     </p>
-    <p class="stub">Coming soon — first residents: the feasibility calculators.</p>
   </section>
+
+  <div class="projects">
+    {projects.map((p) => (
+      <article class="project">
+        <div class="shot" aria-hidden="true">
+          <div class="shot-bar"><span></span><span></span><span></span></div>
+          <img src={p.image} alt={p.alt} loading="lazy" />
+        </div>
+        <div class="info">
+          <p class="status">{p.status}</p>
+          <h2>{p.name}</h2>
+          <p class="tagline">{p.tagline}</p>
+          <p class="desc">{p.description}</p>
+          <p class="stack">{p.stack}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <p class="stub">Next in the workshop: an interactive hotel feasibility toolkit — the calculators I use at work, opened up.</p>
 </BaseLayout>
+
+<style>
+  .projects { display: flex; flex-direction: column; gap: 2.25rem; margin-top: 2rem; }
+  .project {
+    display: grid;
+    grid-template-columns: minmax(0, 17rem) 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (max-width: 640px) {
+    .project { grid-template-columns: 1fr; }
+  }
+  .shot {
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    background: var(--card);
+  }
+  .shot-bar {
+    display: flex;
+    gap: 0.3rem;
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .shot-bar span {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .shot img { display: block; width: 100%; height: auto; }
+  .status {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    margin: 0 0 0.75rem;
+  }
+  .info h2 { margin: 0 0 0.15rem; font-size: 1.35rem; letter-spacing: -0.01em; }
+  .tagline { margin: 0 0 0.75rem; color: var(--accent); font-weight: 600; font-size: 0.95rem; }
+  .desc { margin: 0 0 0.9rem; }
+  .stack {
+    margin: 0;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+</style>
