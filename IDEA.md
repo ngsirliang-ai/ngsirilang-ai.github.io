@@ -66,6 +66,10 @@ practice, APAC hotel markets, and building automations as a non-developer.
 - Planned feature: site chatbot relaying to William's Telegram — V1 relay
   (Cloudflare Worker + second BotFather bot; cannot reuse Jarv gateway bot,
   polling conflict), V2 LLM auto-responder, V3 two-way live.
+- 2026-10-22 morning: **SITE IS LIVE — https://ngsirliang-ai.github.io/**
+  GitHub lifted the overnight flag; repo renamed from sirilang→sirliang
+  spelling to match the account (old URL 301s); astro site URL fixed;
+  first green deploy-on-push verified; watchdog cron retired.
 - 2026-10-21 night session: About page voice pass (William's own jokes —
   Beerlao/sea urchin/George Clooney/handcuffs), departure-board timeline
   (hover-expand stops, click pins), real SVG flags in public/flags/ (Windows

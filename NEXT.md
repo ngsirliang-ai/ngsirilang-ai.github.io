@@ -38,12 +38,16 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 - [ ] Shader hero island (shaders/js) — ONE effect, after design pass.
 - [ ] Nice-to-have: OG/meta tags + preview image, favicon set, sitemap.
 
-## 🚩 External events in flight
+## ✅ Resolved 2026-10-22
 
-- **GitHub repo flag** (ngsirilang-ai.github.io): watchdog cron
-  `site-unflag-finish` (job b94ce1ba2189) checks every 2h → auto-enables
-  Pages, re-runs deploy, pings William. Manual fallback if it ever needs it:
-  repo Settings → Pages → Source "GitHub Actions" + re-run the workflow.
+- GitHub lifted the flag overnight. Repo renamed to match the account:
+  `ngsirliang-ai/ngsirliang-ai.github.io` (old spelling 301-redirects, and
+  `astro.config.mjs` site URL fixed to match).
+  **SITE LIVE: https://ngsirliang-ai.github.io/** — all 5 pages 200,
+  deploy-on-push verified green. Watchdog cron removed (job done).
+  Note: Pages dashboard says build_type "legacy" but Actions deploys are
+  what actually serves the built site — cosmetic, revisit only if a
+  future deploy misbehaves.
 - **Domain** — optional later: sirliangng.com (~US$12/yr) → point at Pages.
 
 ## 🗃️ Manus project repos (private, pushed)
