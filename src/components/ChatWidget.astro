@@ -243,6 +243,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: VISITOR_NAME, text, page: location.pathname, sid: SID }),
+        signal: AbortSignal.timeout(10000), // don't spin forever on blocked networks
       });
       const data = await r.json();
       typing.remove();
@@ -254,7 +255,7 @@
       startPolling();
     } catch (err) {
       typing.remove();
-      safeSay('', 'Hmm, that didn\'t reach William. Please email him instead: cue-vmitjb@bot.cue.im', 'bot');
+      safeSay('', 'This network can\'t reach William\'s relay right now (common inside mainland China). Email works everywhere: cue-vmitjb@bot.cue.im', 'bot');
     }
   }
 
