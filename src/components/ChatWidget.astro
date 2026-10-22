@@ -217,7 +217,7 @@
   // ── Two-way chat state ───────────────────────────────────────────
   let SID = localStorage.getItem('chat-sid') || '';
   let VISITOR_NAME = localStorage.getItem('chat-name') || '';
-  let CONV = false;   // true once the visitor chose to talk to William
+  let CONV = localStorage.getItem('chat-conv') === '1';   // survives reloads
   let rendered = 0;   // thread entries already on screen
   let pollTimer = null;
 
@@ -294,6 +294,7 @@
       return;
     }
     CONV = true;
+    localStorage.setItem('chat-conv', '1');
     if (VISITOR_NAME) {
       safeSay('', 'You\'re connected to William\'s Telegram, ' + VISITOR_NAME + '. Type your message and he gets it instantly — his replies appear right here.', 'bot');
     } else {
@@ -349,7 +350,7 @@
     if (open && log.children.length === 0) {
       say('Hi! I\'m the site guide. Ask me about William\'s projects, his automation habit — or say <em>connect</em> to chat with him directly.', 'bot');
     }
-    if (open && CONV && SID) { rendered = 0; fetchThread(); startPolling(); }
+    if (open && SID && RELAY_URL) { rendered = 0; fetchThread(); startPolling(); }
     if (open) input.focus();
   });
   document.getElementById('chat-close').addEventListener('click', () => {
