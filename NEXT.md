@@ -13,9 +13,16 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 - [ ] **Cloudflare account** — dash.cloudflare.com, free plan, no card.
       Then: deploy worker/relay.js (already written, secrets via wrangler),
       set RELAY_URL in ChatWidget, restore widget as footer link.
-- [x] **Mark Six + TamaDroid** — DONE 2026-10-22 as Automations cards
-      ("Lottery Systems Lab" terminal with real 132-draw data; TamaDroid
-      with real phone screenshot + demo links).
+- [x] **Mark Six + TamaDroid** — DONE 2026-10-22: Lottery Systems Lab card
+      live on Automations (real 132-draw data). **Pixel Pet / AI Passport
+      card REMOVED same day — William is rebuilding the project; card returns
+      with an emulator screenshot once a firmware .bin exists.** For that
+      future session: simulator cloned at D:\projects\folotoy-sim
+      (`node server.mjs --allow-local-firmware-upload`, port 4190, upload
+      merged .bin via 上传固件, keyboard ↑/↓/Enter/P), source at
+      D:\projects\reverse-engineer-anything\ai-passport (build needs
+      ESP-IDF + ROM text file supplied locally, see
+      tools/generate_tama_rom.py).
 - [x] **Real contact email** — done 2026-10-22: Cue relay
       `cue-vmitjb@bot.cue.im` live on About + parked ChatWidget. LinkedIn via
       short link `is.gd/2iiRiX` (clean 301; tinyurl.com wraps links in a

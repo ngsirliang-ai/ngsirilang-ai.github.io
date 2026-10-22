@@ -83,37 +83,6 @@ const projects = [
     ))}
   </div>
 
-  <article class="project">
-    <div class="treebox">
-      <pre class="tree">ai-passport/
-├─ components/
-│  ├─ bsp/      board drivers
-│  └─ tamalib/  GPLv2 core
-└─ main/
-   ├─ tamagotchi_app.c
-   └─ tamagotchi_rom.c
-
-ESP32-C3 · FreeRTOS
-240×320 · 32×16 LCD ×7
-NVS save states
-ROM: bring your own</pre>
-    </div>
-    <div class="info">
-      <h2>Pixel Pet for the AI Passport</h2>
-      <p class="tagline">A Tamagotchi that lives inside an AI toy</p>
-      <p class="desc">
-        FoloToy's AI Passport is a wearable AI gadget — ESP32-C3, a 240×320
-        screen, three buttons. I took its open firmware apart, ported the
-        TamaLib Tamagotchi engine onto the chip as a FreeRTOS app, and render
-        the original 32×16 pet LCD at 7× with a muted reflective palette.
-        Save states persist across reboots. The ROM deliberately isn't in the
-        repo — it's Bandai's copyright; you supply your own.
-      </p>
-      <p class="stack">ESP-IDF · C · TamaLib (GPLv2) · FreeRTOS · NVS</p>
-      <p class="stack">Studied along the way: TamaDroid (Android) · Tamagotchi-Emulator-Pebble</p>
-    </div>
-  </article>
-
   <p class="stub">Next in the workshop: an interactive hotel feasibility toolkit — the calculators I use at work, opened up.</p>
 </BaseLayout>
 
@@ -215,23 +184,6 @@ ROM: bring your own</pre>
   .info h2 { margin: 0 0 0.15rem; font-size: 1.35rem; letter-spacing: -0.01em; }
   .tagline { margin: 0 0 0.75rem; color: var(--text); opacity: 0.85; font-weight: 600; font-size: 0.95rem; }
   .desc { margin: 0 0 0.9rem; }
-  /* Firmware project: repo-tree panel instead of a screenshot */
-  .treebox {
-    border: 1px solid var(--border);
-    border-radius: 0.6rem;
-    background: #0b0d10;
-    overflow: hidden;
-  }
-  .tree {
-    margin: 0;
-    padding: 0.85rem 0.95rem;
-    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
-    font-size: 0.72rem;
-    line-height: 1.6;
-    white-space: pre;
-    overflow-x: auto;
-    color: #e8edf2;
-  }
   .stack {
     margin: 0;
     font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
