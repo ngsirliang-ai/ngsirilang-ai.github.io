@@ -11,10 +11,8 @@
 //    navigation). A real LLM upgrade later only replaces `think()`.
 ---
 
-<!-- The launcher button -->
-<button type="button" id="chat-launcher" aria-label="Open chat" aria-expanded="false">
-  <span aria-hidden="true">💬</span>
-</button>
+<!-- The launcher — a quiet footer link, not a floating bubble -->
+<button type="button" id="chat-launcher" aria-expanded="false">💬 Ask me</button>
 
 <!-- The chat panel -->
 <div id="chat-panel" role="dialog" aria-label="Chat assistant" hidden>
@@ -38,32 +36,15 @@
 </div>
 
 <style>
-  /* Launcher — compact icon-only FAB, stays out of the content's way */
+  /* Launcher — styled like a footer text link, zero footprint until clicked */
   #chat-launcher {
-    position: fixed;
-    right: 1rem;
-    bottom: 1rem;
-    z-index: 60;
-    width: 2.9rem;
-    height: 2.9rem;
-    display: grid;
-    place-items: center;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text);
-    border-radius: 50%;
-    padding: 0;
+    all: unset;
     cursor: pointer;
     font: inherit;
-    font-size: 1.05rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 0.875rem;
+    color: var(--accent);
   }
-  #chat-launcher:hover { border-color: var(--accent); }
-
-  /* Keep page-bottom content clear of the button on small screens */
-  @media (max-width: 600px) {
-    :global(.site-footer) { padding-bottom: 4.5rem; }
-  }
+  #chat-launcher:hover { text-decoration: underline; }
 
   #chat-panel[hidden] { display: none; } /* hidden must win over display:flex — fixes X-to-close */
 
@@ -71,7 +52,7 @@
   #chat-panel {
     position: fixed;
     right: 1rem;
-    bottom: 4.35rem;
+    bottom: 1rem;
     z-index: 60;
     width: min(21rem, calc(100vw - 2.2rem));
     max-height: min(30rem, 70vh);
@@ -314,5 +295,14 @@
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !panel.hidden) { panel.hidden = true; launcher.focus(); }
+  });
+  // Close when clicking anywhere outside the panel or the launcher link
+  document.addEventListener('click', (e) => {
+    if (panel.hidden) return;
+    const t = e.target;
+    if (!panel.contains(t) && t !== launcher && !launcher.contains(t)) {
+      panel.hidden = true;
+      launcher.setAttribute('aria-expanded', 'false');
+    }
   });
 </script>
