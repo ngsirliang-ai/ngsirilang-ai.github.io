@@ -43,6 +43,18 @@ see the personal-site skill). Preview for William: `desktop_preview` open
   site's queue (may link to it when it exists).
 - **Custom domain** — waits until there's "something plausible to show".
 
+## 🚑 Deploy pipeline quirk (2026-10-23)
+
+- **Push events no longer trigger Actions** (started ~23:18 SGT Oct 22; probe
+  commits ad6bb9c + 01c967e created zero runs; Actions off/on toggle via API
+  didn't help; repo is public + not archived/disabled). Likely flag residue —
+  **if still dead after 48h, file a GitHub support ticket**.
+- **Stopgap in place**: `bash deploy.sh "message"` (repo root) = commit +
+  push + `gh workflow run deploy.yml --ref main`. Every push must be
+  followed by a manual dispatch or the live site won't update.
+- Verify serving with: `curl -s https://ngsirliang-ai.github.io/ | grep -c chat-conv`
+  (≥1 = current build live).
+
 ## 🤖 Chatbot (LIVE 2026-10-22 — two-way)
 
 - **V3 two-way chat SHIPPED**: footer "Ask me" → visitor says connect →
