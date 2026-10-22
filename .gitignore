@@ -17,3 +17,6 @@ npm-debug.log*
 # OS / editor noise
 .DS_Store
 Thumbs.db
+
+# wrangler local state (deploy cache, tmp builds)
+worker/.wrangler/
