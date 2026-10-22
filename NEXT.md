@@ -10,9 +10,17 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 - [x] **BotFather bot** — DONE 2026-10-22: @SirLiangWeb_bot. Token +
       chat_id (8258403217) saved in Desktop\Config\ (site-relay-bot-token.txt,
       site-relay-chat-id.txt). Test DM delivered ✓.
-- [ ] **Cloudflare account** — dash.cloudflare.com, free plan, no card.
-      Then: deploy worker/relay.js (already written, secrets via wrangler),
-      set RELAY_URL in ChatWidget, restore widget as footer link.
+- [x] **Cloudflare account + Worker** — DONE 2026-10-22: subdomain
+      `ngsirliang.workers.dev` registered (wrangler's own register command
+      crashes — did it via REST API with wrangler's stored OAuth token);
+      worker published at **https://site-relay.ngsirliang.workers.dev/message**
+      (wrangler.toml main=relay.js, name=site-relay); secrets BOT_TOKEN +
+      CHAT_ID uploaded and listed; Telegram leg verified live (getMe +
+      sendMessage ok). **NOTE: workers.dev is GFW-blocked — cannot test the
+      worker URL from China even via Clash (routes direct). Visitors abroad
+      reach it fine. To self-test: add Clash rule
+      DOMAIN-SUFFIX,workers.dev → Proxy, or test from VPN.**
+      RELAY_URL wired into the parked ChatWidget component.
 - [x] **Mark Six + TamaDroid** — DONE 2026-10-22: Lottery Systems Lab card
       live on Automations (real 132-draw data). **Pixel Pet / AI Passport
       card REMOVED same day — William is rebuilding the project; card returns
