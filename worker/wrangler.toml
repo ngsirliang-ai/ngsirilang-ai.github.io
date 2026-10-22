@@ -1,3 +1,13 @@
+# Wrangler config — wrangler is Cloudflare's deploy CLI.
+# Secrets are NOT here; they are set with:
+#   npx wrangler secret put BOT_TOKEN
+#   npx wrangler secret put CHAT_ID
+#   npx wrangler secret put WEBHOOK_SECRET
 name = "site-relay"
 main = "relay.js"
 compatibility_date = "2026-10-22"
+
+# KV store for two-way chat threads (visitor <-> William), TTL 24h
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "09680d4a9cf04836b57186fb67b6e70f"

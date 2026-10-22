@@ -214,51 +214,112 @@
     return null;
   }
 
-  function handleConnect() {
-    const box = say(
-      'Want to reach William? Leave a message and it lands on his Telegram. ' +
-      (RELAY_URL ? '' : '(Direct relay is coming soon — for now this reaches him by email.)'),
-      'bot'
-    );
-    const f = document.createElement('form');
-    f.innerHTML =
-      '<input name="name" placeholder="Your name" required />' +
-      '<textarea name="text" rows="3" placeholder="Your message" required></textarea>' +
-      '<button type="submit">Send to William ➤</button>';
-    f.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = f.name.value.trim();
-      const text = f.text.value.trim();
-      if (!name || !text) return;
-      f.querySelector('button').disabled = true;
+  // ── Two-way chat state ───────────────────────────────────────────
+  let SID = localStorage.getItem('chat-sid') || '';
+  let VISITOR_NAME = localStorage.getItem('chat-name') || '';
+  let CONV = false;   // true once the visitor chose to talk to William
+  let rendered = 0;   // thread entries already on screen
+  let pollTimer = null;
+
+  function safeSay(prefix, text, who) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + who;
+    if (prefix) {
+      const b = document.createElement('strong');
+      b.textContent = prefix;
+      div.appendChild(b);
+    }
+    div.appendChild(document.createTextNode(text));
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function replyBase() { return RELAY_URL.replace(/\/message$/, '/reply'); }
+
+  async function sendToWilliam(text) {
+    const typing = safeSay('', '…', 'bot');
+    try {
+      const r = await fetch(RELAY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: VISITOR_NAME, text, page: location.pathname, sid: SID }),
+      });
+      const data = await r.json();
+      typing.remove();
+      if (!r.ok || !data.ok) throw new Error('relay');
+      if (data.sid) { SID = data.sid; localStorage.setItem('chat-sid', SID); }
+      localStorage.setItem('chat-name', VISITOR_NAME);
+      rendered++; // our own message is already on screen
+      safeSay('', 'Sent to William\'s Telegram ✓ — his reply will appear right here. He usually answers within a day; this chat remembers you for 24 hours.', 'bot');
+      startPolling();
+    } catch (err) {
+      typing.remove();
+      safeSay('', 'Hmm, that didn\'t reach William. Please email him instead: cue-vmitjb@bot.cue.im', 'bot');
+    }
+  }
+
+  function startPolling() {
+    if (pollTimer || !RELAY_URL || !SID) return;
+    pollTimer = setInterval(async () => {
+      if (panel.hidden) return;
       try {
-        if (RELAY_URL) {
-          await fetch(RELAY_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, text, page: location.pathname }),
-          });
-          say('Delivered ✓ — William will see it on Telegram and reply to you by email.', 'bot');
-        } else {
-          location.href = 'mailto:cue-vmitjb@bot.cue.im?subject=' +
-            encodeURIComponent('Site message from ' + name) +
-            '&body=' + encodeURIComponent(text);
-          say('Opening your email app… (a direct-to-Telegram relay is coming soon.)', 'bot');
-        }
-      } catch (err) {
-        say('Hmm, that didn\'t send. Please email William directly instead.', 'bot');
-      }
-      f.remove();
-    });
-    box.appendChild(f);
+        const r = await fetch(replyBase() + '?sid=' + SID);
+        const data = await r.json();
+        if (data.ok) renderThread(data.messages || []);
+      } catch (e) { /* offline — retry next tick */ }
+    }, 4000);
+  }
+
+  async function fetchThread() {
+    try {
+      const r = await fetch(replyBase() + '?sid=' + SID);
+      const data = await r.json();
+      if (data.ok) renderThread(data.messages || []);
+    } catch (e) {}
+  }
+
+  function renderThread(thread) {
+    for (let i = rendered; i < thread.length; i++) {
+      const m = thread[i];
+      if (m.who === 'william') safeSay('William: ', m.text, 'bot');
+      else safeSay(m.name ? m.name + ': ' : '', m.text, 'user');
+      rendered = i + 1;
+    }
+  }
+
+  function startConversation() {
+    if (!RELAY_URL) {
+      location.href = 'mailto:cue-vmitjb@bot.cue.im?subject=Hello%20William';
+      return;
+    }
+    CONV = true;
+    if (VISITOR_NAME) {
+      safeSay('', 'You\'re connected to William\'s Telegram, ' + VISITOR_NAME + '. Type your message and he gets it instantly — his replies appear right here.', 'bot');
+    } else {
+      safeSay('', 'You\'re connected to William\'s Telegram. First — what\'s your name?', 'bot');
+    }
+    if (SID) { rendered = 0; fetchThread(); startPolling(); }
+    input.focus();
   }
 
   function respond(text) {
     const intent = think(text);
-    if (!intent) { say(FALLBACK, 'bot'); return; }
-    if (intent.reply === '__CONNECT__') { handleConnect(); return; }
-    say(intent.reply, 'bot');
-    if (intent.go) setTimeout(() => { location.href = intent.go; }, 1400);
+    if (intent && intent.reply === '__CONNECT__') { startConversation(); return; }
+    if (CONV) {
+      if (!VISITOR_NAME) {
+        VISITOR_NAME = text.slice(0, 80);
+        safeSay('', 'Nice to meet you, ' + VISITOR_NAME + '. What did you want to tell William?', 'bot');
+        return;
+      }
+      sendToWilliam(text);
+      return;
+    }
+    if (intent) {
+      say(intent.reply, 'bot');
+      if (intent.go) setTimeout(() => { location.href = intent.go; }, 1400);
+      return;
+    }
+    safeSay('', 'No scripted answer for that — but I can pass it straight to William on Telegram. Say <em>connect</em>, or just tell me your name and your message.', 'bot');
   }
 
   // quick chips
@@ -285,8 +346,9 @@
     panel.hidden = !open;
     launcher.setAttribute('aria-expanded', String(open));
     if (open && log.children.length === 0) {
-      say('Hi! I\'m the site guide. Ask me about William\'s projects, his automation habit — or say <em>connect</em> to reach him.', 'bot');
+      say('Hi! I\'m the site guide. Ask me about William\'s projects, his automation habit — or say <em>connect</em> to chat with him directly.', 'bot');
     }
+    if (open && CONV && SID) { rendered = 0; fetchThread(); startPolling(); }
     if (open) input.focus();
   });
   document.getElementById('chat-close').addEventListener('click', () => {
