@@ -43,16 +43,18 @@ see the personal-site skill). Preview for William: `desktop_preview` open
   site's queue (may link to it when it exists).
 - **Custom domain** — waits until there's "something plausible to show".
 
-## 🤖 Chatbot (Phase B — next build session)
+## 🤖 Chatbot (LIVE 2026-10-22 — two-way)
 
-- [ ] **ChatWidget parked (2026-10-22, William: "affecting experience")** —
-      component file kept at src/components/ChatWidget.astro; restore by
-      re-adding `import ChatWidget` + `<ChatWidget />` in BaseLayout.astro.
-      Redesign as a quieter affordance (e.g. a footer "Ask me" link that
-      opens the panel) before it returns.
-- [ ] Cloudflare Worker: POST /message → rate-limit → Telegram sendMessage to
-      William's chat_id (secrets: bot token + chat id).
-- [ ] Set `RELAY_URL` in `src/components/ChatWidget.astro`, test end-to-end.
+- **V3 two-way chat SHIPPED**: footer "Ask me" → visitor says connect →
+  name → messages go to William's Telegram via worker (KV threads,
+  24h TTL). **William just types in the bot chat** → routed to the
+  current/newest visitor session; `/sessions` lists chats, `/talk <id>`
+  switches, swipe-reply targets exactly. Site polls /reply every 4s;
+  threads persist 24h (localStorage sid). Worker version a1d059d6.
+- ChatWidget parked → restored 2026-10-22 as footer link (William's pick).
+- [ ] Full end-to-end test needs a non-China browser (workers.dev is
+      GFW-blocked locally) — either add Clash rule
+      DOMAIN-SUFFIX,workers.dev → Proxy, or test via VPN phone.
 - [ ] (Phase C, optional) LLM brain upgrade — replace `think()` only.
 
 ## 🌐 Website next steps
