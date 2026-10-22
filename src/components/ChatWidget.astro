@@ -215,7 +215,14 @@
   }
 
   // ── Two-way chat state ───────────────────────────────────────────
-  let SID = localStorage.getItem('chat-sid') || '';
+  // Client-minted session id, stored before any network call — so even if
+  // a response gets eaten by a flaky network, the thread stays findable.
+  // (The server accepts client-supplied sids.)
+  let SID = localStorage.getItem('chat-sid');
+  if (!SID) {
+    SID = crypto.randomUUID().replace(/-/g, '').slice(0, 10);
+    localStorage.setItem('chat-sid', SID);
+  }
   let VISITOR_NAME = localStorage.getItem('chat-name') || '';
   let CONV = localStorage.getItem('chat-conv') === '1';   // survives reloads
   let rendered = 0;   // thread entries already on screen
@@ -255,7 +262,8 @@
       startPolling();
     } catch (err) {
       typing.remove();
-      safeSay('', 'This network can\'t reach William\'s relay right now (common inside mainland China). Email works everywhere: cue-vmitjb@bot.cue.im', 'bot');
+      safeSay('', 'Slow network — your message may still have gone through, and replies will appear here if they do. If nothing arrives, email: cue-vmitjb@bot.cue.im', 'bot');
+      startPolling(); // SID is known even on a lost response — keep listening
     }
   }
 
@@ -310,6 +318,7 @@
     if (CONV) {
       if (!VISITOR_NAME) {
         VISITOR_NAME = text.slice(0, 80);
+        localStorage.setItem('chat-name', VISITOR_NAME);
         safeSay('', 'Nice to meet you, ' + VISITOR_NAME + '. What did you want to tell William?', 'bot');
         return;
       }
