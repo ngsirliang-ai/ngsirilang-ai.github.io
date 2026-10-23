@@ -133,11 +133,15 @@ export default {
 
       await appendMsg(env, sid, { who: 'visitor', name, text, page, t: now });
 
-      // Track recent sessions for /sessions and default reply routing
+      // Track recent sessions for /sessions and default reply routing.
+      // The newest visitor to speak becomes 'current' — William's plain-text
+      // replies follow the latest active conversation.
       const recent = JSON.parse((await env.SESSIONS.get('recent')) || '[]');
       await env.SESSIONS.put('recent',
         JSON.stringify([{ sid, t: now }, ...recent.filter(r => r.sid !== sid)].slice(0, 10)),
         { expirationTtl: 86400 });
+      if ((await env.SESSIONS.get('current')) !== sid)
+        await env.SESSIONS.put('current', sid, { expirationTtl: 86400 });
 
       const sent = await tgSend(env, env.CHAT_ID,
         `📩 ${name} (chat ${sid})\nPage: ${page}\n\n${text}\n\n— to answer: just type in this chat (goes to ${name}), or swipe-reply here to target exactly`);
