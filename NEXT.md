@@ -74,6 +74,10 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 
 ## 🌐 Website next steps
 
+- [x] Location medallions (2026-10-23): stop flags → circular photo crops
+      (Wikimedia Commons, credits in `public/img/stops/CREDITS.json`),
+      stacked coins in the stop headers; auditor stays unmedalled.
+
 - [ ] Writing section: content collections + first post (William writes).
 - [ ] Kopi digest card: REMOVED from plan (William: private only, 2026-10-22).
 - [ ] Feasibility toolkit — William builds separately (off this queue).
