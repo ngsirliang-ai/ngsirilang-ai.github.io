@@ -228,22 +228,31 @@ const contact = {
     cursor: pointer;
     font: inherit;
     color: inherit;
+    font-size: 1.02rem;
+    transition: font-size 0.3s ease;
+  }
+  /* Hover/open = 1.5x the resting size (desktop pointers only — on touch,
+     tap already opens the stop and a 1.5x jump would feel jumpy) */
+  @media (hover: hover) {
+    .stop:hover .stop-head,
+    .stop.open .stop-head,
+    .stop.pinned .stop-head { font-size: 1.53rem; }
   }
   .stop-head:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0.35rem; }
-  .stop-name { font-weight: 600; font-size: 1.02rem; }
+  .stop-name { font-weight: 600; } /* size inherits from .stop-head so it scales */
   /* Departure-board metadata: mono, uppercase, brass, tabular — the board voice */
   .stop-head .period {
     margin-left: auto;
     white-space: nowrap;
     font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
-    font-size: 0.74rem;
+    font-size: 0.72em; /* em, not rem — scales with the header */
     letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--accent);
     font-variant-numeric: tabular-nums;
   }
   .chev {
-    font-size: 0.8rem;
+    font-size: 0.78em;
     color: var(--muted);
     transition: transform 0.35s ease;
   }
@@ -258,7 +267,7 @@ const contact = {
   .stop-inner { overflow: hidden; min-height: 0; }
   .stop-inner .roles { margin-top: 0.15rem; }
   @media (prefers-reduced-motion: reduce) {
-    .stop-body, .chev, .stop::before { transition: none; }
+    .stop-body, .chev, .stop::before, .stop-head, .medal { transition: none; }
   }
   .roles { list-style: none; margin: 0.6rem 0 0.4rem; padding: 0; }
   .roles li { font-size: 0.925rem; color: var(--text); margin-bottom: 0.2rem; }
@@ -280,12 +289,13 @@ const contact = {
   /* Location medallions — photos cropped into circles, stacked like coins */
   .medals { display: inline-flex; align-items: center; align-self: center; }
   .medal {
-    width: 2.6rem;
-    height: 2.6rem;
+    width: 2.55em;  /* em of the header font-size — medallions scale to 1.5x on hover */
+    height: 2.55em;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--card);
     box-shadow: 0 0 0 1px var(--border);
+    transition: width 0.3s ease, height 0.3s ease;
   }
   .medal + .medal { margin-left: -0.6rem; }
   .flag {
