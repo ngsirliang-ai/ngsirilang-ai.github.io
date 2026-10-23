@@ -107,6 +107,13 @@ line B    06 07 09 18 19 46   (+34)
       <a href="https://github.com/ngsirliang-ai/lottery-systems-lab" rel="noopener">github.com/ngsirliang-ai/lottery-systems-lab</a>
     </p>
 
+    <p class="flow-label">Prerequisites</p>
+    <ul class="prereq">
+      <li>Python 3.9+ — everything runs on the standard library</li>
+      <li>A TypeSafe account with API access (<a href="https://typesafe.ai" rel="noopener">typesafe.ai</a>) — the Jev scoring step reads a <code>TYPESAFE_API_KEY</code> env variable; fetching works without it</li>
+      <li>Network access to the official sources: HKJC, CWL (SSQ), Singapore Pools</li>
+    </ul>
+
     <p class="flow-label">How it runs</p>
     <code class="flow">HKJC / SSQ draw history → data cleaning → JEV-scored frequency × recency → evidence-backed candidate lines</code>
   </article>
