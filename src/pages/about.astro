@@ -343,9 +343,11 @@ const contact = {
   .stack-logo {
     width: 1.15rem;
     height: 1.15rem;
+    padding: 2px; /* inset the mark */
     border-radius: 0.3rem;
-    object-fit: cover;
-    background: var(--card);
+    object-fit: contain;
+    background: #f2efe9; /* light chip so dark logos survive the dark theme */
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
   }
 
   /* Scroll-reveal removed — stops now expand on hover/tap. */
