@@ -115,3 +115,10 @@ hdb-stats · live-stats-test · reverse-engineer-anything · mark-six-predicter 
 games (Sip Club — **excluded from site until mature**, William's rule).
 Not yet pushed: kopi-coffee (needs git init). Branches: master (these),
 main (website).
+- **lottery-systems-lab (PUBLIC, 2026-10-23)** — curated public release of
+  mark-six-predicter at
+  github.com/ngsirliang-ai/lottery-systems-lab (linked from the Automations
+  card). Rebuilt via `mark-six-predicter/build-public.py` (latest script
+  versions, dates → CLI args, no history/noise). Private original stays
+  private — it contains `upload/apikeyjev.docx` (JEV API key doc) and
+  `tmp/manus-config/` — **never flip it public**.
