@@ -136,15 +136,18 @@ export default {
       // Track recent sessions for /sessions and default reply routing.
       // The newest visitor to speak becomes 'current' — William's plain-text
       // replies follow the latest active conversation.
+      const prevCurrent = await env.SESSIONS.get('current');
       const recent = JSON.parse((await env.SESSIONS.get('recent')) || '[]');
       await env.SESSIONS.put('recent',
         JSON.stringify([{ sid, t: now }, ...recent.filter(r => r.sid !== sid)].slice(0, 10)),
         { expirationTtl: 86400 });
-      if ((await env.SESSIONS.get('current')) !== sid)
+      if (prevCurrent !== sid)
         await env.SESSIONS.put('current', sid, { expirationTtl: 86400 });
 
       const sent = await tgSend(env, env.CHAT_ID,
         `📩 ${name} (chat ${sid})\nPage: ${page}\n\n${text}\n\n— to answer: just type in this chat (goes to ${name}), or swipe-reply here to target exactly`);
+      if (prevCurrent && prevCurrent !== sid)
+        await tgSend(env, env.CHAT_ID, `🔀 Now talking to ${name} (${sid}) — /sessions to switch.`);
       if (sent && sent.ok && sent.result)
         await env.SESSIONS.put('tgmap:' + sent.result.message_id, sid, { expirationTtl: 86400 });
 
