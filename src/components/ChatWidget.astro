@@ -267,7 +267,7 @@
   function startPolling() {
     if (pollTimer || !RELAY_URL || !SID) return;
     pollTimer = setInterval(async () => {
-      if (panel.hidden) return;
+      if (panel.hidden || document.hidden) return;
       try {
         const r = await fetch(replyBase() + '?sid=' + SID);
         const data = await r.json();
@@ -368,6 +368,10 @@
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !panel.hidden) { panel.hidden = true; launcher.focus(); }
+  });
+  // Returning to the tab = fetch replies immediately instead of waiting for the next tick
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && SID && !panel.hidden) fetchThread(false);
   });
   // Close when clicking anywhere outside the panel or the launcher link
   document.addEventListener('click', (e) => {
