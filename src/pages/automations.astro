@@ -40,15 +40,20 @@ Source: NEA · data.gov.sg</pre>
 
     <!-- The brief description below the box -->
     <p>
-      Twice a day — and instantly when any region crosses an unhealthy
-      threshold — a scheduled agent pulls Singapore's official air-quality
+      Hourly — a scheduled agent pulls Singapore's official air-quality
       readings from the NEA open API, breaks PSI and PM2.5 down by region,
-      and delivers the digest to my family on Telegram. My parents in
-      Singapore see the haze coming before they smell it.
+      and delivers the digest to my family on Telegram.
     </p>
 
+    <p class="flow-label">Prerequisites</p>
+    <ul class="prereq">
+      <li>A free <a href="https://data.gov.sg" rel="noopener">data.gov.sg</a> API key — the NEA PSI endpoint requires it</li>
+      <li>A Telegram bot from <a href="https://t.me/BotFather" rel="noopener">@BotFather</a>, plus your chat ID</li>
+      <li>Any always-on machine (or cron box) that can reach both APIs</li>
+    </ul>
+
     <p class="flow-label">How it runs</p>
-    <code class="flow">NEA open API → scheduled agent · 2× daily + threshold watch → regional PSI/PM2.5 digest → Telegram DM</code>
+    <code class="flow">hourly cron → NEA PSI API (authenticated) → regional PSI / PM2.5 breakdown → formatted digest → Telegram Bot API push</code>
   </article>
 
   <article class="automation">
@@ -107,6 +112,10 @@ line B    06 07 09 18 19 46   (+34)
     color: #e8edf2;
   }
   .flow-label { font-weight: 600; margin-bottom: 0.4rem; }
+  .flow-label:not(:first-of-type) { margin-top: 1rem; }
+  .prereq { margin: 0 0 0.4rem; padding-left: 1.2rem; font-size: 0.925rem; color: var(--text); }
+  .prereq li { margin-bottom: 0.25rem; }
+  .prereq a { color: var(--accent); }
   /* Terminal-style preview box (Lottery Systems Lab) */
   .term {
     width: 100%;
