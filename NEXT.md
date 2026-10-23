@@ -55,18 +55,21 @@ see the personal-site skill). Preview for William: `desktop_preview` open
 - Verify serving with: `curl -s https://ngsirliang-ai.github.io/ | grep -c chat-conv`
   (≥1 = current build live).
 
-## 🤖 Chatbot (LIVE 2026-10-22 — two-way)
+## 🤖 Chatbot (LIVE & VERIFIED 2026-10-23 — two-way, William confirmed)
 
-- **V3 two-way chat SHIPPED**: footer "Ask me" → visitor says connect →
-  name → messages go to William's Telegram via worker (KV threads,
-  24h TTL). **William just types in the bot chat** → routed to the
-  current/newest visitor session; `/sessions` lists chats, `/talk <id>`
-  switches, swipe-reply targets exactly. Site polls /reply every 4s;
-  threads persist 24h (localStorage sid). Worker version a1d059d6.
-- ChatWidget parked → restored 2026-10-22 as footer link (William's pick).
-- [ ] Full end-to-end test needs a non-China browser (workers.dev is
-      GFW-blocked locally) — either add Clash rule
-      DOMAIN-SUFFIX,workers.dev → Proxy, or test via VPN phone.
+- **Full loop working**: footer Ask me → connect → visitor messages hit
+  William's Telegram via worker (KV threads, 24h TTL); William just TYPES
+  in @SirLiangWeb_bot → routed to the newest active visitor ('current'
+  seat) → widget polls /reply every 4s → "William:" bubble in ≤5-8s.
+- **Routing model**: newest visitor to speak claims 'current'; flip is
+  announced ("🔀 Now talking to X"); /sessions lists; /talk <id> switches;
+  swipe-reply = surgical. Threads independent, expire 24h.
+- **Resilience fixes shipped**: client-minted session id (lost responses
+  can't orphan threads); 10s send timeout + graceful fallback to
+  cue-vmitjb@bot.cue.im; polls skip own messages (no duplicates) and pause
+  in hidden tabs; conversation + name persist in localStorage.
+- **Lag is ~5-8s** (webhook 1-2s + 4s poll). Snappier options if ever
+  wanted: 2s poll (more KV reads) or custom domain on the worker.
 - [ ] (Phase C, optional) LLM brain upgrade — replace `think()` only.
 
 ## 🌐 Website next steps

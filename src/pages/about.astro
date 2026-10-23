@@ -7,21 +7,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const cities = [
   {
-    flags: ['la'],
+    photos: [
+      { src: '/img/stops/laos-alms.jpg', alt: 'Morning alms giving, Luang Prabang' },
+      { src: '/img/stops/patuxay.jpg', alt: 'Patuxay monument, Vientiane' },
+    ],
     city: 'Laos — Luang Prabang & Vientiane',
     period: 'the beginning',
     roles: ['Hotel Salesman'],
     note: 'Fresh out of NUS with an economics degree and a suitcase. Sold rooms, learned Lao, and drank lots of Beerlao 🍺',
   },
   {
-    flags: ['ch'],
+    photos: [{ src: '/img/stops/alps.jpg', alt: 'The Alps' }],
     city: 'Switzerland',
     period: 'hotel school',
     roles: [],
     note: 'Traded Beerlao for the Alps and fresh air.',
   },
   {
-    flags: ['mv', 'my', 'th'],
+    photos: [
+      { src: '/img/stops/seaplane.jpg', alt: 'Seaplane, Maldives' },
+      { src: '/img/stops/petronas.jpg', alt: 'Petronas Towers at night, Kuala Lumpur' },
+      { src: '/img/stops/palace.jpg', alt: 'Grand Palace, Bangkok' },
+    ],
     city: 'Maldives · Kuala Lumpur · Bangkok',
     period: '2014 — 2016',
     roles: ['Management Trainee turned Finance Manager · Minor International'],
@@ -44,14 +51,14 @@ const cities = [
     note: 'Two years auditing hotel finance operations across seven countries. Didn\u2019t rack up miles like George Clooney, but learned every level of genius there is in cheating the system.',
   },
   {
-    flags: ['cn'],
+    photos: [{ src: '/img/stops/pearl.jpg', alt: 'Oriental Pearl Tower at night, Shanghai' }],
     city: 'Shanghai',
     period: '2018 — 2023',
     roles: ['World of Feasibility \u2014 Optimism Maximus! (Feasibility Manager \u2192 Senior Feasibility Manager)'],
     note: 'Learned the craft here, with colleagues who made it fun \u2014 and my wife opened a kopi shop',
   },
   {
-    flags: ['hk'],
+    photos: [{ src: '/img/stops/victoria.jpg', alt: 'Victoria Harbour at night, Hong Kong' }],
     city: 'Hong Kong, again',
     period: '2023 — present',
     roles: ['Senior Feasibility Manager \u2192 Director of Feasibility \u2014 better title, same handcuffs'],
@@ -107,10 +114,10 @@ const contact = {
       {cities.map((c, i) => (
         <div class:list={['stop', i === 0 && 'open']}>
           <button type="button" class="stop-head" aria-expanded={i === 0 ? 'true' : 'false'}>
-            {c.flags.length > 0 && (
-              <span class="flags">
-                {c.flags.map((f) => (
-                  <img class="flag" src={`/flags/${f}.svg`} alt="" width="24" height="16" />
+            {c.photos && c.photos.length > 0 && (
+              <span class="medals">
+                {c.photos.map((p) => (
+                  <img class="medal" src={p.src} alt={p.alt} width="44" height="44" loading="lazy" />
                 ))}
               </span>
             )}
@@ -270,6 +277,17 @@ const contact = {
 
   /* Flags & audit stamps — real SVG images (Windows can't show flag emoji) */
   .flags { display: inline-flex; gap: 0.25rem; align-items: center; }
+  /* Location medallions — photos cropped into circles, stacked like coins */
+  .medals { display: inline-flex; align-items: center; align-self: center; }
+  .medal {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--card);
+    box-shadow: 0 0 0 1px var(--border);
+  }
+  .medal + .medal { margin-left: -0.6rem; }
   .flag {
     height: 0.95em;
     width: auto;
