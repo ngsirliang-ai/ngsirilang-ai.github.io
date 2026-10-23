@@ -73,14 +73,19 @@ const wherenow = [
   { flag: 'cn', label: 'Work / Play', value: 'Shanghai' },
 ];
 
-// The toolkit — edit freely. Icons are emoji (render everywhere, no assets).
+// The toolkit — edit freely. Logos live in public/img/logos/ (favicons).
 const aiStack = [
-  { label: 'Harness', items: [{ icon: '⚡', name: 'Hermes' }, { icon: '🤖', name: 'Manus' }] },
+  { label: 'Harness', items: [{ logo: '/img/logos/hermes.png', name: 'Hermes' }, { logo: '/img/logos/manus.png', name: 'Manus' }] },
   {
     label: 'Models',
-    items: [{ icon: '💬', name: 'ChatGPT' }, { icon: '✨', name: 'Gemini' }, { icon: '🧠', name: 'GLM' }],
+    items: [
+      { logo: '/img/logos/chatgpt.png', name: 'ChatGPT' },
+      { logo: '/img/logos/gemini.png', name: 'Gemini' },
+      { logo: '/img/logos/glm.png', name: 'GLM' },
+      { logo: '/img/logos/qwen.png', name: 'Qwen' },
+    ],
   },
-  { label: 'Automation Tools', items: [{ icon: '🔗', name: 'n8n' }] },
+  { label: 'Automation Tools', items: [{ logo: '/img/logos/n8n.png', name: 'n8n' }] },
 ];
 
 // TODO(you): replace with how you actually want to be contacted.
@@ -174,7 +179,8 @@ const contact = {
           <span class="stack-items">
             {row.items.map((t) => (
               <span class="stack-item">
-                <span aria-hidden="true">{t.icon}</span> {t.name}
+                <img class="stack-logo" src={t.logo} alt="" width="18" height="18" loading="lazy" />
+                {t.name}
               </span>
             ))}
           </span>
@@ -333,6 +339,13 @@ const contact = {
     border-radius: 999px;
     padding: 0.24rem 0.75rem;
     font-size: 0.85rem;
+  }
+  .stack-logo {
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 0.3rem;
+    object-fit: cover;
+    background: var(--card);
   }
 
   /* Scroll-reveal removed — stops now expand on hover/tap. */
